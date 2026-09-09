@@ -4,6 +4,11 @@ Design and static preview, 9 September 2026. No live guild membership service,
 Marmot group, FIPS endpoint, or payout service is configured in this repository.
 `data/guild-charter.json` records these services as unconnected.
 
+**Required architecture: every function is a separate composable napplet.**
+The guild portal is a host layout composing independent tools. It must not own
+one monolithic guild frontend. The [napplet composition contract](guild-napplets.md)
+and `data/guild-napplets.json` define the boundaries for implementation.
+
 ## Product
 
 The guild has a roster, reviewed admissions, officers, local meetups, shared

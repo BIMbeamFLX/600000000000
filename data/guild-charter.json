@@ -4,6 +4,12 @@
   "name": "600B Guild",
   "target_members": 600000,
   "state": "preview",
+  "composition": {
+    "model": "one_function_per_napplet",
+    "catalog": "data/guild-napplets.json",
+    "runtime": "not_connected",
+    "cross_napplet_access": "host_mediated"
+  },
   "identity": "nostr_nip07_host",
   "groups": {
     "protocol": "marmot",

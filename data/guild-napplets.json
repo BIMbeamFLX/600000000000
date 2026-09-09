@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "state": "design_catalog",
+  "note": "Product boundaries, not SDK capability names or installable manifests. No entrypoints ship yet.",
+  "napplets": [
+    { "id": "guild-roster", "name": "Roster", "purpose": "Browse the permitted member roster", "host_services": ["roster_read"] },
+    { "id": "guild-admissions", "name": "Admissions", "purpose": "Request and review guild admission", "host_services": ["identity", "admission_workflow"] },
+    { "id": "guild-roles", "name": "Duties", "purpose": "Review and assign authorized guild duties", "host_services": ["identity", "role_workflow"] },
+    { "id": "guild-chapters", "name": "Local chapters", "purpose": "Find local chapters in a list or map", "host_services": ["chapter_read"] },
+    { "id": "guild-calendar", "name": "Calendar", "purpose": "Schedule and respond to guild meetups", "host_services": ["identity", "event_workflow"] },
+    { "id": "guild-operations", "name": "Operations", "purpose": "Coordinate shared guild activities", "host_services": ["identity", "operation_workflow"] },
+    { "id": "guild-chat", "name": "Party chat", "purpose": "Read and send messages in authorized Marmot groups", "host_services": ["marmot_messages"] },
+    { "id": "guild-group-admin", "name": "Group invitations", "purpose": "Manage authorized Marmot group admission and removal", "host_services": ["identity", "marmot_membership"] },
+    { "id": "guild-treasury", "name": "Guild bank", "purpose": "Inspect the permitted reserve and transaction ledger", "host_services": ["treasury_read"] },
+    { "id": "guild-faucet", "name": "Welcome claim", "purpose": "Request and track a single eligible welcome payout", "host_services": ["identity", "claim_workflow"] },
+    { "id": "guild-identity-review", "name": "Identity review", "purpose": "Review recorded Nostr identity and NIP-05 evidence", "host_services": ["identity", "identity_review_workflow"] },
+    { "id": "guild-recovery", "name": "Key recovery", "purpose": "Review a member key replacement under the guardian policy", "host_services": ["identity", "recovery_workflow"] },
+    { "id": "guild-collectibles", "name": "Pay to Polish", "purpose": "Browse and request optional cosmetic purchases", "host_services": ["identity", "cosmetic_purchase_workflow"] },
+    { "id": "guild-network", "name": "Mesh status", "purpose": "Inspect host-reported FIPS connectivity", "host_services": ["network_status"] }
+  ]
+}
