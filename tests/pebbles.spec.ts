@@ -29,7 +29,7 @@ test("welcome page loads its assets and keeps payouts explicitly closed", async 
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("The Pebbles — 600.wtf");
   await expect(page.getByRole("heading", { name: "Small stone. Big company." })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Claim 21 · coming soon" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Claim · coming soon" })).toBeDisabled();
   await expect(page.getByText("FAUCET NOT OPEN YET", { exact: true })).toBeVisible();
   expect(await page.locator(".sacred-stone").evaluate((image: HTMLImageElement) =>
     image.complete && image.naturalWidth > 0)).toBe(true);
@@ -58,7 +58,7 @@ test("NIP-07 connection stays local and does not grant membership or unlock clai
   await page.getByRole("button", { name: "Connect with Nostr" }).click();
   await expect(page.locator("#public-key")).toHaveText(PUBLIC_KEY);
   await expect(page.getByRole("status")).toContainText("Membership and token claims open when");
-  await expect(page.getByRole("button", { name: "Claim 21 · coming soon" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Claim · coming soon" })).toBeDisabled();
   expect(await page.evaluate(() => ({ local: localStorage.length, session: sessionStorage.length })))
     .toEqual({ local: 0, session: 0 });
   expect(outbound).toEqual([]);

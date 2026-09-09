@@ -1,0 +1,46 @@
+/* SPDX-License-Identifier: MIT */
+.elders-page { background: #1b1b19; color: #fffaf1; }
+.elders-page .site-header, .elders-page .site-footer, .elders-page .plumbing { border-color: #fffaf14d; }
+.elders-page .hero-story .eyebrow { color: #f7931a; }
+.elders-page h1 { font-size: clamp(3rem, 5.4vw, 5rem); }
+.elders-page .welcome-card { color: #1b1b19; box-shadow: 8px 8px 0 #f7931a; }
+.elders-page .card-heading { background: #f7931a; color: #1b1b19; }
+.elders-page .manifesto { background: #f7931a; color: #1b1b19; }
+.elders-page .manifesto span { color: #1b1b19; }
+.elders-page .skip-link { color: #1b1b19; }
+.elders-page a:focus-visible { outline-color: #f7931a; }
+.elders-page .welcome-card button:focus-visible { outline-color: #1b1b19; }
+.reserve { display: grid; grid-template-columns: 1fr 1.7fr; gap: 40px; padding-block: 64px; }
+.reserve-numbers { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+.reserve-numbers > div { border-top: 1px solid #fffaf14d; padding-top: 14px; }
+.reserve-numbers span { font-size: .75rem; letter-spacing: .07em; }
+.reserve-numbers strong { font: 400 2.7rem 'Anton', Impact, sans-serif; display: block; margin-block: 6px; }
+.reserve-numbers small { font: 400 .875rem 'Trebuchet MS', Arial, sans-serif; }
+.reserve-numbers p { font-size: .875rem; }
+.reserve-total { grid-column: 1 / -1; }
+.reserve-total strong { color: #f7931a; }
+.founders { padding-bottom: 56px; }
+.roster-heading { display: flex; gap: 30px; justify-content: space-between; align-items: end; margin-bottom: 25px; }
+.roster-heading h2 { font: 400 2.25rem 'Alfa Slab One', Georgia, serif; margin-top: 15px; }
+.roster-heading > p { font-size: .875rem; max-width: 390px; }
+.founder-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0 22px; list-style: none; padding: 0; margin: 0; }
+.founder-list li { padding-block: 15px; border-top: 1px solid #fffaf14d; overflow-wrap: anywhere; }
+.founder-list .founder-name { display: block; font-size: 1rem; }
+.founder-list .founder-state { display: block; font-size: .75rem; color: #cbc6bc; margin-top: 5px; }
+.founder-list .pending .founder-state { color: #f7931a; }
+.roster-note { margin-top: 20px; font-size: .875rem; }
+.elders-page .site-footer { border-top: 0; margin-top: 22px; }
+@media (max-width: 1050px) {
+    .elders-page h1 { font-size: 4.7vw; }
+    .reserve { grid-template-columns: 1fr 1fr; }
+    .founder-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+    .elders-page h1 { font-size: clamp(2.8rem, 8.7vw, 4rem); }
+    .reserve { grid-template-columns: 1fr; padding-block: 44px; }
+    .reserve-numbers { gap: 24px 15px; }
+    .reserve-numbers strong { font-size: 2.2rem; }
+    .roster-heading { display: block; }
+    .roster-heading > p { margin-top: 16px; }
+    .founder-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

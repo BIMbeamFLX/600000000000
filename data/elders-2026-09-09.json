@@ -1,0 +1,280 @@
+{
+  "version": 1,
+  "snapshot_date": "2026-09-09",
+  "source_sha256": "4ef932a4c61271062372abeb32857bca97a33cd459743ca2609efab19f41d900",
+  "asset_id": "bd1d3b1f10a3e1eb5ac2d332f118005f126f8c37fab490f8c8d84ddbd8c763c7",
+  "precision": 8,
+  "claim_state": "closed",
+  "founders": [
+    {
+      "id": "founder-dni",
+      "name": "dni",
+      "nip05": "dni@600.wtf",
+      "pubkey": "1c94c0b44577edf41509d473a92d9f7b6bc04e3ae07f705e709c2999b1d3e074",
+      "source": "Existing .well-known/nostr.json mapping for dni",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-nind",
+      "name": "nind",
+      "nip05": "n@600.wtf",
+      "pubkey": "cb33c1d6d3381b3117059cc292b5a8cc868a01ddf84f0c630318042a7b58454a",
+      "source": "Existing .well-known/nostr.json mapping for n",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-michael1011",
+      "name": "michael1011",
+      "nip05": "m@bol.tz",
+      "pubkey": "3dcc157a0304ec26ea131a0f4e576e2da67ff5c66980949c55bd7f0bb1b5efa1",
+      "source": "Existing local NIP-05 alias michael1011; user authorized existing mapping; m@bol.tz currently unavailable",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-sat",
+      "name": "sat",
+      "nip05": "sat@600.wtf",
+      "pubkey": "67aa1421e1d47146e4a91212a12c63752da7279202e0d6393fdfd05b2db4226f",
+      "source": "Existing .well-known/nostr.json mapping for sat",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-flx",
+      "name": "flx",
+      "nip05": "flx@600.wtf",
+      "pubkey": "872b60fdd8ec73ce1323d9798057384fb9836500d9b7201594c71ae3fce2b680",
+      "source": "Existing .well-known/nostr.json mapping for flx",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-shillie",
+      "name": "shillie",
+      "nip05": "quillie@600.wtf",
+      "pubkey": "6c2d68ba016c291417fd18ea7c06b737ec143f7d56d78fdd44a5b248846525ec",
+      "source": "Existing .well-known/nostr.json mapping for quillie",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-arbadacarba",
+      "name": "arbadacarba",
+      "nip05": "arbadacarba@600.wtf",
+      "pubkey": "9a83779e75080556c656d4d418d02a4d7edbe288a2f9e6dd2b48799ec935184c",
+      "source": "Existing .well-known/nostr.json mapping for arbadacarba",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-benarc",
+      "name": "benarc",
+      "nip05": "ben@nostr.com",
+      "pubkey": "c1fc7771f5fa418fd3ac49221a18f19b42ccb7a663da8f04cbbf6c08c80d20b1",
+      "source": "https://nostr.com/.well-known/nostr.json?name=ben",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-tobo",
+      "name": "tobo",
+      "nip05": "tobo@600.wtf",
+      "pubkey": "1cf75683d02b4ec0aa4d2127ff45d335fe2ef5a884b5794775d608bace006a16",
+      "source": "Existing .well-known/nostr.json mapping for tobo",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-blackcoffee",
+      "name": "BlackCoffee",
+      "nip05": "bc@600.wtf",
+      "pubkey": "683211bd155c7b764e4b99ba263a151d81209be7a566a2bb1971dc1bbd3b715e",
+      "source": "Existing .well-known/nostr.json mapping for bc",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-darren",
+      "name": "darren",
+      "nip05": "darren@600.wtf",
+      "pubkey": "da19f1cd34beca44be74da4b306d9d1dd86b6343cef94ce22c49c6f59816e5bd",
+      "source": "Existing .well-known/nostr.json mapping for darren",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-leon",
+      "name": "leon",
+      "nip05": "leon@600.wtf",
+      "pubkey": "08b83dfa66881e7396aefeb9de2c6401690b7292b890e94870b39bd4e1c6cdb8",
+      "source": "Existing .well-known/nostr.json mapping for leon",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-rootzoll",
+      "name": "rootzoll",
+      "nip05": "rootzoll@600.wtf",
+      "pubkey": "d164d78c0b58edeb22d54942ccf2f8155befa45dc0e3717cc1f81d0f113451bf",
+      "source": "Existing .well-known/nostr.json mapping for rootzoll",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-nc",
+      "name": "nc",
+      "nip05": "nc@600.wtf",
+      "pubkey": "83cdde02b4b847fb37f2425b3f7a014aa33fbf761d36ef81a666f51c0c4436f9",
+      "source": "Existing .well-known/nostr.json mapping for nc",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-longy",
+      "name": "longy",
+      "nip05": "longy@600.wtf",
+      "pubkey": "2842e34860c59dfacd5df48ba7a65065e6760d08c35f779553d83c2c2310b493",
+      "source": "Existing .well-known/nostr.json mapping for longy",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-essex",
+      "name": "essex",
+      "nip05": "essex@600.wtf",
+      "pubkey": "c44ab6eeeb3a0e5d5c8d8ae82afad0e397bdfbc9200d7d8fc3ee14a69e9f740c",
+      "source": "Existing .well-known/nostr.json mapping for essex",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-madmunky",
+      "name": "madmunky",
+      "nip05": "madmunky@600.wtf",
+      "pubkey": "3eacaa768326d7dce80f6ee17ada199bebe7eb3c1a60b39b14e0a58bbac66fe4",
+      "source": "Existing .well-known/nostr.json mapping for madmunky",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-jedai",
+      "name": "jedai",
+      "nip05": "jedai@600.wtf",
+      "pubkey": "fe6104d291746db0132f54974e6d4331ced86f43fc00a75f592c1d20e1d22b8c",
+      "source": "Existing .well-known/nostr.json mapping for jedai",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-gadaj",
+      "name": "Gadaj",
+      "nip05": "gadaj@600.wtf",
+      "pubkey": null,
+      "source": "No existing exact NIP-05 mapping found; do not substitute GDJ",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-p",
+      "name": "p",
+      "nip05": "p@600.wtf",
+      "pubkey": "1a5ffc51a12303fd022d481f37ed60c3f7d375f66e6f891678a1cf548b89e08c",
+      "source": "Existing .well-known/nostr.json mapping for p",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-aj",
+      "name": "aj",
+      "nip05": "aj@600.wtf",
+      "pubkey": "3252715543f6e43be086465129b030d47d76cf8cead4798e48864563c3375083",
+      "source": "Existing .well-known/nostr.json mapping for aj",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-bam",
+      "name": "bam",
+      "nip05": "bam@600.wtf",
+      "pubkey": "d3f94b353542a632962062f3c914638d0deeba64af1f980d93907ee1b3e0d4f9",
+      "source": "Existing .well-known/nostr.json mapping for bam",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-mhb",
+      "name": "mhb",
+      "nip05": "mhb@600.wtf",
+      "pubkey": "9985c5c4b7241341afd715d4e2610543a03e6c4934ab6a7e90d15173c0d950ee",
+      "source": "Existing .well-known/nostr.json mapping for mhb",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-snick",
+      "name": "snick",
+      "nip05": "snick@600.wtf",
+      "pubkey": "149e07e619eedd32e47568d3197e36e270f4b5b048c6f652bf56fe90667dbf89",
+      "source": "Existing .well-known/nostr.json mapping for snick",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-tal",
+      "name": "tal",
+      "nip05": "tal@600.wtf",
+      "pubkey": "8f69ac99b96f7c4ad58b98cc38fe5d35ce02daefae7d1609c797ce3b4f92f5fd",
+      "source": "Existing .well-known/nostr.json mapping for tal",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-bk",
+      "name": "bk",
+      "nip05": "Bk@600.wtf",
+      "pubkey": "3878d95db7b854c3a0d3b2d6b7bf9bf28b36162be64326f5521ba71cf3b45a69",
+      "source": "Existing .well-known/nostr.json mapping for Bk",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-gdj",
+      "name": "GDJ",
+      "nip05": "gdj@600.wtf",
+      "pubkey": "688ee92aaf4d585f3bafb838fea89502f9d4378e526028b0a9a4d52a3ca32a8a",
+      "source": "Existing .well-known/nostr.json mapping for gdj",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-mtoshi",
+      "name": "mtoshi",
+      "nip05": "mtoshi@600.wtf",
+      "pubkey": "9d9b4562e26cf492e4ddc5cef6c468001da9e1049030659d51b8f4f5016051c5",
+      "source": "Existing .well-known/nostr.json mapping for mtoshi",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-morgs",
+      "name": "morgs",
+      "nip05": "morgs@600.wtf",
+      "pubkey": "85d3208b506353157943606179b79a1ef88aede0e925bbecabd35ef4cb98d01f",
+      "source": "Existing .well-known/nostr.json mapping for morgs",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    },
+    {
+      "id": "founder-cuddy",
+      "name": "cuddy",
+      "nip05": "cuddy@600.wtf",
+      "pubkey": "668ac389d67f4f4be637f7e567c9054392c080db7c0b257264701ab4048166ff",
+      "source": "Existing .well-known/nostr.json mapping for cuddy",
+      "review_status": "signature_review_pending",
+      "allocation_atoms": 2100000000
+    }
+  ]
+}

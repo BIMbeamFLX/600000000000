@@ -2,8 +2,12 @@
 
 `/pebbles.html` is the 600.wtf Nostr community welcome page. The original crew are
 **The Stoned**; the online community are **The Pebbles**. Pebble membership does not
-include the private Signal group or other internal access. The intended welcome is
-**21 whole tokens of the existing 600 Liquid asset, once per eligible member**.
+include the private Signal group or other internal access. Supply verification on
+2026-09-09 found 6,000 whole tokens, so 21 tokens each cannot cover 600,000 members.
+The proposed Pebble welcome is **0.021 whole 600 initially, declining by cohort**;
+the schedule remains under review and claims stay closed. The user approved a
+separate elder allocation: 30 founders at 21 each and 570 future elders at 2.1 each.
+See [the 21-year plan](600-21-year-plan.md) and [identity recovery design](elder-identity-napplet.md).
 
 ## Current behavior
 
