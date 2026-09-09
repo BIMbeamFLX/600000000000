@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "state": "design_catalog",
-  "note": "Product boundaries, not SDK capability names or installable manifests. No entrypoints ship yet.",
+  "state": "design_catalog_with_two_preview_builds",
+  "note": "16 function boundaries; two Raffle preview builds. See implementation fields for actual advertised contracts. Other services remain designs.",
   "napplets": [
     {
       "id": "guild-roster",
@@ -506,6 +506,116 @@
         }
       ],
       "dispatches": []
+    },
+    {
+      "id": "guild-raffle",
+      "name": "Raffle organizer",
+      "purpose": "Configure and manage a funded LNURLcash ticket run",
+      "host_services": [
+        "identity",
+        "raffle_workflow"
+      ],
+      "archetype": {
+        "slug": "raffle-manager",
+        "status": "local_proposal"
+      },
+      "accepts": [
+        {
+          "action": "open",
+          "convention": "napplet:raffle-manager/open-v1",
+          "status": "local_payload_proposal",
+          "payload": {
+            "version": 1,
+            "required": [
+              "guildId"
+            ],
+            "optional": [
+              "raffleId"
+            ],
+            "additional_fields": false,
+            "id_format": "opaque_nonempty_string_max_128",
+            "max_bytes": 2048
+          }
+        }
+      ],
+      "dispatches": [
+        {
+          "archetype": "ticket-printer",
+          "convention": "napplet:ticket-printer/open-v1"
+        }
+      ],
+      "reuse": {
+        "repository": "https://github.com/lnurlcash/raffle",
+        "revision": "2221e60c2188be1616e4e01e4486d2bb3d8a94b5",
+        "state": "pinned_source_reused"
+      },
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/raffle/index.html",
+        "manifest": "napplets/dist/raffle/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:raffle-manager/open-v1"
+        ],
+        "sdk": "@napplet/sdk 0.28.0",
+        "host_validation": "domain_fixtures_only",
+        "funding": "not_connected",
+        "export": "standalone_preview_only",
+        "dispatches": [
+          {
+            "archetype": "ticket-printer",
+            "convention": "napplet:ticket-printer/preview-v1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "guild-ticket-print",
+      "name": "Ticket printer",
+      "purpose": "Preview and request authorized raffle PDF or CSV exports",
+      "host_services": [
+        "raffle_read",
+        "ticket_export"
+      ],
+      "archetype": {
+        "slug": "ticket-printer",
+        "status": "local_proposal"
+      },
+      "accepts": [
+        {
+          "action": "open",
+          "convention": "napplet:ticket-printer/open-v1",
+          "status": "local_payload_proposal",
+          "payload": {
+            "version": 1,
+            "required": [
+              "guildId",
+              "raffleId"
+            ],
+            "optional": [],
+            "additional_fields": false,
+            "id_format": "opaque_nonempty_string_max_128",
+            "max_bytes": 2048
+          }
+        }
+      ],
+      "dispatches": [],
+      "reuse": {
+        "repository": "https://github.com/lnurlcash/raffle",
+        "revision": "2221e60c2188be1616e4e01e4486d2bb3d8a94b5",
+        "state": "pinned_source_reused"
+      },
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/ticket-printer/index.html",
+        "manifest": "napplets/dist/ticket-printer/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:ticket-printer/preview-v1"
+        ],
+        "sdk": "@napplet/sdk 0.28.0",
+        "host_validation": "domain_fixtures_only",
+        "funding": "not_connected",
+        "export": "standalone_preview_only"
+      }
     }
   ],
   "contract_version": 1,

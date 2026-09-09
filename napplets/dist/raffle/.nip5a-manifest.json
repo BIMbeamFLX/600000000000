@@ -1,0 +1,27 @@
+{
+  "kind": 35129,
+  "created_at": 1788991033,
+  "tags": [
+    [
+      "d",
+      "600b-raffle"
+    ],
+    [
+      "path",
+      "/index.html",
+      "71603cb08f5f3b8bae14a7cca65f60cb1231698829a3b4e8087eabf7cd3031a7"
+    ],
+    [
+      "x",
+      "ec366cddcc834e5119ac21fd7198fa48cd6468f48d652f17fe8f51866247c3de",
+      "aggregate"
+    ],
+    [
+      "archetype",
+      "raffle-manager",
+      "napplet:raffle-manager/open-v1"
+    ]
+  ],
+  "content": "",
+  "aggregateHash": "ec366cddcc834e5119ac21fd7198fa48cd6468f48d652f17fe8f51866247c3de"
+}

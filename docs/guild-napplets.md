@@ -4,7 +4,9 @@ User requirement, 9 September 2026: **one function per napplet**. The guild port
 composes independent napplets; it does not become a single guild application.
 `data/guild-napplets.json` is a design catalog, not an installable Nappelin manifest.
 Its host-service labels describe responsibilities, not invented SDK methods.
-The existing static pages remain previews and have not been packaged as napplets.
+The welcome and Elders pages remain static previews. Raffle organizer and Ticket
+printer now have independent single-file builds and generated archetype metadata
+in `napplets/dist/`. They implement planning and non-spendable print previews.
 
 Every catalog entry now declares its archetype status, accepted intent convention,
 versioned input fields, and outbound role-based intents. See
@@ -29,10 +31,16 @@ fallback behavior, source evidence, and SDK compatibility gap.
 | Key recovery | Process guardian review | Recovery case | Recovery status |
 | Pay to Polish | Buy cosmetics | Catalog and selected item | Purchase status |
 | Mesh status | Inspect FIPS connectivity | Host network status | Reachability projection |
+| Raffle organizer | Configure a funded LNURLcash raffle | Guild and optional raffle ID | Ticket-run status |
+| Ticket printer | Preview/export raffle tickets | Guild and raffle ID | Authorized export status |
 
 Rai and elder claims use the same claim napplet with different server-verified
 entitlements. Do not copy the claim engine or build a second claim counter.
 Elder restrictions cannot be supplied as trusted props from another napplet.
+
+Raffle management and ticket printing reuse the design of
+[dni's LNURLcash raffle](raffle-integration.md). Their sat funding is separate
+from the Liquid welcome. The catalog now describes 16 independent tools.
 
 ## Composition contract
 
@@ -83,5 +91,6 @@ Verify a missing Marmot/FIPS capability leaves unrelated tools usable and never
 downgrades private messages to public transport. Test compatibility when swapping
 one tool while keeping the rest of the portal unchanged.
 
-The present deliverable specifies these boundaries. It does not ship a host SDK,
-message bus, independent napplet bundles, or operational backend endpoints.
+The other 14 tools remain designs. The two Raffle bundles use the pinned SDK and
+are tested with host-domain fixtures; full installed-host conformance and operational
+backend endpoints are not yet provided. See [Raffle integration](raffle-integration.md).

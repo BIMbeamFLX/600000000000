@@ -1,7 +1,9 @@
 # Guild intents and archetypes
 
 Contract design, 9 September 2026. Catalog: `data/guild-napplets.json`.
-These contracts are not installed handlers. Every new role/convention below is
+Most contracts are designs. The two Raffle builds have local manifest metadata
+and fixture-tested intent handling, but are not installed on a production host.
+Every new role/convention below is
 a local proposal unless explicitly marked as an upstream draft.
 
 ## Vocabulary and evidence
@@ -35,7 +37,11 @@ Inspected local sources:
 Pin matching host, SDK, manifest plugin, and conformance tooling before implementation.
 Do not cast types away, pass new fields through an old shim, or rename fields
 without testing discovery, delivery, and manifest parsing together. No runtime
-package has been upgraded here. Current contract examples below are design data.
+package in the separate Palace repository has been upgraded here. The new Raffle
+workspace independently pins `@napplet/sdk 0.28.0` (core/nap 0.32.0) and
+`@napplet/vite-plugin 0.14.1`, whose types use `convention/conventions`.
+Its builds and host-domain fixtures pass; full production-host compatibility is
+still unverified. General guild contract examples below remain design data.
 
 ## Roles and accepted open contracts
 
@@ -59,6 +65,19 @@ opening a review or claim tool must not perform its privileged operation.
 | Key recovery | `key-recovery` | `caseId` | — |
 | Pay to Polish | `collectible-catalog` | — | `itemId` |
 | Mesh status | `network-status` | — | — |
+| Raffle organizer | `raffle-manager` | — | `raffleId` |
+| Ticket printer | `ticket-printer` | `raffleId` | — |
+
+**Implemented preview exception:** the printer currently advertises
+`napplet:ticket-printer/preview-v1`, carrying `{version: 1, config}` rather than a
+private raffle ID. This public planning payload is capped at 8 KB, eight tiers,
+300 tickets, and whole sat amounts. Its validator is `napplets/src/plan.ts`.
+It rejects unknown fields (including note URLs/seeds), duplicate IDs, unsupported
+versions, and oversized counts before expansion. It contains no member identity
+or spendable material. The private `open-v1` printer contract above remains a design
+and is not advertised in the built manifest. Standalone pages hand off this
+non-secret configuration in a URL fragment; the receiver validates and clears it.
+Embedded napplets use NAP-INTENT and subscribe to the matching INC delivery topic.
 
 The catalog is the machine-readable definition of this table and each tool's
 outbound intents. A future change updates both in one review.
@@ -125,6 +144,7 @@ Proposed composition examples:
 - Admissions → Group invitations and Welcome claim, with server-verified context.
 - Local chapters → Calendar → Operations → Party chat, when an authorized group exists.
 - Guild bank → Welcome claim for the current user's eligible entitlement.
+- Raffle organizer → Ticket printer with a host-authorized raffle ID, never bearer secrets.
 
 An outgoing catalog entry permits offering navigation, not automatic invocation.
 Obtain missing context from an authorized host service or user selection; do not

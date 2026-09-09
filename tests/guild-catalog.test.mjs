@@ -2,6 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 
 const readJson = path => JSON.parse(readFileSync(new URL(path, import.meta.url)));
 const charter = readJson('../data/guild-charter.json');
@@ -36,6 +37,22 @@ test('outgoing intents resolve by role to an explicitly accepted convention', ()
       assert.ok(candidates.some(tool => tool.accepts.some(
         accepted => accepted.convention === outgoing.convention)),
       `${source.id} has no compatible design handler for ${outgoing.convention}`);
+    }
+  }
+});
+
+test('built previews match their advertised manifest contracts and content hashes', () => {
+  const built = catalog.napplets.filter(tool => tool.implementation?.state === 'preview_built');
+  assert.equal(built.length, 2);
+  for (const tool of built) {
+    const manifest = readJson(`../${tool.implementation.manifest}`);
+    const bytes = readFileSync(new URL(`../${tool.implementation.entrypoint}`, import.meta.url));
+    assert.equal(manifest.tags.find(tag => tag[0] === 'path')[2], createHash('sha256').update(bytes).digest('hex'));
+    assert.deepEqual(manifest.tags.filter(tag => tag[0] === 'archetype').map(tag => tag[2]),
+      tool.implementation.accepted_conventions);
+    for (const outgoing of tool.implementation.dispatches ?? []) {
+      assert.ok(built.some(target => target.archetype.slug === outgoing.archetype
+        && target.implementation.accepted_conventions.includes(outgoing.convention)));
     }
   }
 });
