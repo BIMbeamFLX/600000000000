@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Elders’ Desk — 600.wtf</title>
+    <meta name="description" content="The original 30. A one-time allocation of 21 Liquid tokens each, with a separate reserve for 600 elders in total. Still not a cult.">
+    <meta name="theme-color" content="#1b1b19">
+    <link rel="icon" href="img/favicon.ico">
+    <link rel="stylesheet" href="pebbles.css">
+    <link rel="stylesheet" href="elders.css">
+    <script src="elders.js" defer></script>
+</head>
+<body class="elders-page">
+    <a class="skip-link" href="#elders-desk">Skip to the Elders’ desk</a>
+    <header class="site-header wrap">
+        <a class="wordmark" href="index.html" aria-label="600.wtf home">600<span>.wtf</span></a>
+        <span class="header-note">THE ORIGINAL STONES / EST. BEFORE THE FAUCET</span>
+        <a class="nav-link" href="pebbles.html">The Rock Garden <span aria-hidden="true">↗</span></a>
+    </header>
+    <main>
+        <section class="hero wrap" aria-labelledby="page-title">
+            <div class="hero-story">
+                <p class="eyebrow">THE STONED / REAL-LIFE CREW ONLY</p>
+                <h1 id="page-title">Before there<br>was plumbing.</h1>
+                <p class="hero-copy">There were 30 stones.<br>This desk is for that original, real-life crew.</p>
+                <div class="stone-scene">
+                    <img class="sacred-stone" src="img/sacred-stone.webp"
+                        alt="The original 600 Billion stone" width="240" height="295">
+                    <div class="stone-caption">
+                        <span class="caption-arrow" aria-hidden="true">↙</span>
+                        <p>Seniority.<br>Measured in<br><strong>sediment.</strong></p>
+                        <span class="specimen">OLD STONE. SAME NON-CULT.</span>
+                    </div>
+                </div>
+            </div>
+            <section class="welcome-card" id="elders-desk" aria-labelledby="desk-title">
+                <div class="card-heading"><span>THE ELDERS’ DESK</span><span class="edition">30 ORIGINALS</span></div>
+                <div class="card-body">
+                    <p class="eyebrow">IN THE NAME OF ADAM</p>
+                    <h2 id="desk-title">Your stone was<br>here first.</h2>
+                    <div class="token-amount" aria-label="21 whole 600 tokens per founding elder">
+                        <span class="amount">21</span>
+                        <div class="token-unit"><strong>600</strong><span>LIQUID TOKENS</span></div>
+                    </div>
+                    <p class="welcome-description">One allocation per founding elder.<br>A fixed list. No second helping.</p>
+                    <div class="claim-facts"><span>NIP-07</span><span>FIXED ROSTER OF 30</span><span>ONCE ONLY</span></div>
+                    <div class="connection" id="connection" hidden>
+                        <span class="connection-label">YOUR NOSTR KEY</span>
+                        <code id="public-key"></code>
+                        <button class="text-button" id="disconnect" type="button">Disconnect</button>
+                    </div>
+                    <button class="button button-primary" id="connect" type="button" disabled>
+                        <span>Check my elder key</span><span aria-hidden="true">↗</span>
+                    </button>
+                    <button class="button button-claim" id="elder-claim" type="button" disabled>Claim 21 · not open yet</button>
+                    <p class="connection-status" id="connection-status" role="status" aria-live="polite">Loading the founding roster…</p>
+                    <noscript><p class="no-script">Enable JavaScript to check your key. Claims are not open yet.</p></noscript>
+                    <p class="privacy-note">A key check does not claim tokens or sign a transaction.</p>
+                </div>
+                <div class="faucet-status">
+                    <span class="status-label">PLANNED RESERVE. FUNDING UNVERIFIED.</span>
+                    <p>Wallet funding is unverified. Claims stay closed until signed verification and payouts are connected.</p>
+                </div>
+            </section>
+        </section>
+
+        <div class="manifesto"><p>30 HERE FIRST. <span>ROOM FOR 600 ELDERS.</span></p></div>
+
+        <section class="reserve wrap" aria-labelledby="reserve-title">
+            <div class="section-intro">
+                <p class="eyebrow">A SEPARATE ALLOCATION</p>
+                <h2 id="reserve-title">Leave a stone<br>for the next elder.</h2>
+            </div>
+            <div class="reserve-numbers">
+                <div><span>THE ORIGINAL 30</span><strong>630 <small>600</small></strong><p>30 × 21 whole tokens</p></div>
+                <div><span>THE NEXT 570</span><strong>1,197 <small>600</small></strong><p>570 × 2.1 whole tokens</p></div>
+                <div class="reserve-total"><span>TOTAL ELDERS’ RESERVE</span><strong>1,827 <small>600</small></strong><p>30.45% of the 6,000 issued tokens</p></div>
+            </div>
+        </section>
+
+        <section class="founders wrap" aria-labelledby="founders-title">
+            <div class="roster-heading">
+                <div><p class="eyebrow">FROZEN ROSTER / 9 SEPTEMBER 2026</p><h2 id="founders-title">The original 30.</h2></div>
+                <p>Future elders have their own allocation.<br>Joining the public community does not add a name here.</p>
+            </div>
+            <ol class="founder-list" id="founder-list"></ol>
+            <p class="roster-note" id="roster-note">The 30 founding slots stay reserved while keys are confirmed.</p>
+            <noscript><p>The fixed roster is available in the <a href="data/elders-2026-09-09.json">founding roster file</a>.</p></noscript>
+        </section>
+
+        <section class="plumbing wrap" aria-labelledby="rules-title">
+            <div class="plumbing-title"><p class="eyebrow">THE RULES OF THE ROCK</p><h2 id="rules-title">Membership<br>isn’t for sale.</h2></div>
+            <div class="plumbing-copy">
+                <p>Elders are real-life only. The 570 future places require meeting the crew in person and a separate admission decision. A Nostr key, an online rank, or a purchase cannot make someone an elder. A new key cannot reset a founding claim.</p>
+                <p class="muted">This is a budget allocation, not proof of a wallet balance or an on-chain lock. The crew must fund it before claims open.</p>
+                <a class="inline-link" href="liquid.html">Inspect the Liquid asset <span aria-hidden="true">↗</span></a>
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer wrap">
+        <a class="wordmark" href="index.html">600<span>.wtf</span></a>
+        <p>In Adam’s name, mind the reserve.</p>
+        <a class="nav-link" href="pebbles.html">BACK TO THE ROCK GARDEN ↗</a>
+    </footer>
+</body>
+</html>

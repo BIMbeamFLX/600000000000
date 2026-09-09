@@ -1,0 +1,3 @@
+# Manifest hashes describe exact build bytes on every operating system.
+napplets/dist/** text eol=lf
+napplets/vendor/** text eol=lf

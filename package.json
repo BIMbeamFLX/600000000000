@@ -2,6 +2,7 @@
   "name": "600000000000-static",
   "private": true,
   "scripts": {
+    "test:unit": "node --test tests/*.test.mjs",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed"
   },

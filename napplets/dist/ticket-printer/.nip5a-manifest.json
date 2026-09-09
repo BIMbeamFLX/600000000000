@@ -1,0 +1,27 @@
+{
+  "kind": 35129,
+  "created_at": 1788991034,
+  "tags": [
+    [
+      "d",
+      "600b-ticket-printer"
+    ],
+    [
+      "path",
+      "/index.html",
+      "a6385e7d90107889411dad3460cf1f67e40eaf7388c387f39f7494a01045f79a"
+    ],
+    [
+      "x",
+      "7d4e5349d05fb982e44deba2b5467f749f246578263dd4b83512f1edca2c6a25",
+      "aggregate"
+    ],
+    [
+      "archetype",
+      "ticket-printer",
+      "napplet:ticket-printer/preview-v1"
+    ]
+  ],
+  "content": "",
+  "aggregateHash": "7d4e5349d05fb982e44deba2b5467f749f246578263dd4b83512f1edca2c6a25"
+}

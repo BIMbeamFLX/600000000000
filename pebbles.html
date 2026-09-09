@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Rock Garden — 600.wtf</title>
+    <meta name="description" content="The 600 Billion community on Nostr. Small stones, good company. A one-time Liquid welcome, with the reward schedule under review. Still not a cult.">
+    <meta name="theme-color" content="#f7931a">
+    <link rel="icon" href="img/favicon.ico">
+    <link rel="stylesheet" href="pebbles.css">
+    <script src="pebbles.js" defer></script>
+</head>
+<body>
+    <a class="skip-link" href="#welcome">Skip to the welcome desk</a>
+    <header class="site-header wrap">
+        <a class="wordmark" href="index.html" aria-label="600.wtf home">600<span>.wtf</span></a>
+        <span class="header-note">A SMALL STONE IN THE NOSTR UNIVERSE</span>
+        <a class="nav-link" href="#about">Meet the rocks <span aria-hidden="true">↘</span></a>
+    </header>
+
+    <main>
+        <section class="hero wrap" aria-labelledby="page-title">
+            <div class="hero-story">
+                <p class="eyebrow"><span class="tiny-stone" aria-hidden="true">●</span> 600 BILLION / THE NOSTR COMMUNITY</p>
+                <h1 id="page-title">Small stone.<br>Big company.</h1>
+                <p class="hero-copy">Welcome to <strong>The Rock Garden.</strong> Our people on Nostr.<br>
+                    Bring your key, your memes, your wonderfully weird self.</p>
+                <div class="stone-scene">
+                    <img class="sacred-stone" src="img/sacred-stone.webp"
+                        alt="The small, round 600 Billion stone" width="240" height="295">
+                    <div class="stone-caption">
+                        <span class="caption-arrow" aria-hidden="true">↙</span>
+                        <p>Every community<br>starts with a<br><strong>little rock.</strong></p>
+                        <span class="specimen">EXHIBIT 001 / STILL NOT A CULT</span>
+                    </div>
+                </div>
+            </div>
+
+            <section class="welcome-card" id="welcome" aria-labelledby="welcome-title">
+                <div class="card-heading">
+                    <span>THE WELCOME DESK</span>
+                    <span class="edition">№ 021</span>
+                </div>
+                <div class="card-body">
+                    <p class="eyebrow">IN THE NAME OF ADAM</p>
+                    <h2 id="welcome-title">Your first little<br>piece of 600 Billion.</h2>
+                    <div class="token-amount" aria-label="Proposed first-cohort welcome: 0.021 whole 600 tokens">
+                        <span class="amount amount-fraction">0.021</span>
+                        <div class="token-unit"><strong>600</strong><span>LIQUID TOKENS</span></div>
+                    </div>
+                    <p class="welcome-description">Proposed Rai Stone welcome.<br>21,000 places in the second layer.</p>
+                    <div class="claim-facts"><span>NIP-07</span><span>ONE-TIME WELCOME</span><span>LIQUID</span></div>
+
+                    <div class="connection" id="connection" hidden>
+                        <span class="connection-label">YOUR NOSTR KEY</span>
+                        <code id="public-key"></code>
+                        <button class="text-button" id="disconnect" type="button">Disconnect</button>
+                    </div>
+                    <button class="button button-primary" id="connect" type="button" disabled>
+                        <span>Connect with Nostr</span><span aria-hidden="true">↗</span>
+                    </button>
+                    <button class="button button-claim" type="button" disabled>Claim · coming soon</button>
+                    <p class="connection-status" id="connection-status" role="status" aria-live="polite"></p>
+                    <noscript><p class="no-script">Enable JavaScript to connect your Nostr signer. The faucet is not open yet.</p></noscript>
+                    <p class="privacy-note">Your key stays yours. Nothing is posted to Nostr.</p>
+                </div>
+                <div class="faucet-status">
+                    <span class="status-label">FAUCET NOT OPEN YET</span>
+                    <p>The reward schedule is under review.<br>Wallet and payouts are not connected yet.</p>
+                </div>
+                <div class="receipt-edge" aria-hidden="true"></div>
+            </section>
+        </section>
+
+        <div class="manifesto"><p>WE ARE NOT A CULT. <span>WE HAVE A GUILD CHARTER.</span></p></div>
+
+        <section class="guild-hall wrap" id="guild" aria-labelledby="guild-title">
+            <div class="rock-family-heading">
+                <div><p class="eyebrow">600B GUILD / UNDER CONSTRUCTION</p><h2 id="guild-title">Find your party.<br>Bring your rock.</h2></div>
+                <p>One function. One napplet.<br>Compose your roster, meetups, chat and guild bank.<br>Still working on the matching tabards.</p>
+            </div>
+            <div class="guild-grid">
+                <article><span class="row-label">01 / THE PEOPLE</span><h3>Meet the guild.</h3>
+                    <p>Nostr is your identity. Elders meet in real life. Your rock cohort marks when you joined; officers have separately assigned duties.</p>
+                    <a class="inline-link" href="elders.html#founders-title">Visit the founding roster ↗</a></article>
+                <article><span class="row-label">02 / THE PARTY CHAT</span><h3>Marmot groups.</h3>
+                    <p>Private, encrypted groups for local chapters and small parties. Invitations follow membership review. Group access is not open yet.</p>
+                    <a class="inline-link" href="https://github.com/marmot-protocol/marmot" target="_blank" rel="noopener noreferrer">Meet Marmot ↗</a></article>
+                <article><span class="row-label">03 / THE CONNECTION</span><h3>Across the mesh.</h3>
+                    <p>FIPS is the planned network beneath our guild services. Mesh access needs a connected device or gateway. Our endpoint is not connected yet.</p>
+                    <a class="inline-link" href="https://fips.network/" target="_blank" rel="noopener noreferrer">Explore FIPS ↗</a></article>
+            </div>
+        </section>
+
+        <section class="community wrap" id="about" aria-labelledby="community-title">
+            <div class="section-intro">
+                <p class="eyebrow">SAME ROCK. DIFFERENT ROW.</p>
+                <h2 id="community-title">Find your<br>kind of stone.</h2>
+            </div>
+            <article class="community-kind">
+                <span class="row-label">01 / 600 ELDERS / IRL ONLY</span>
+                <h3>The Stoned.</h3>
+                <p>Actual humans, met in person. The real-life crew and the inner circle. Thirty founding elders, room for 600 in total. No amount of sats buys a place here.</p>
+                <a class="inline-link" href="elders.html">The Elders’ desk <span aria-hidden="true">↗</span></a>
+            </article>
+            <article class="community-kind pebble-kind">
+                <span class="row-label">02 / 21,000 RAI STONES</span>
+                <h3>The Rai Stones.</h3>
+                <p>The second layer. Heavy presence. Light paperwork. Our first 21,000 online members, out on Nostr. No private Signal group or automatic elder status.</p>
+                <a class="inline-link" href="#welcome">Your welcome starts here <span aria-hidden="true">↑</span></a>
+            </article>
+        </section>
+
+        <section class="rock-family wrap" aria-labelledby="rock-family-title">
+            <div class="rock-family-heading">
+                <div><p class="eyebrow">THE REST OF THE GEOLOGY</p><h2 id="rock-family-title">A very normal<br>rock collection.</h2></div>
+                <p>600 elders. 21,000 Rai Stones.<br>The later layers below are a draft.<br>600,000 people in total.</p>
+            </div>
+            <div class="rock-grid">
+                <article><span class="row-label">03 / 42,000 PLACES</span><h3>Obsidian Operators.</h3><p>Sharp takes. Smooth surfaces.</p></article>
+                <article><span class="row-label">04 / 84,000 PLACES</span><h3>Basalt Buddies.</h3><p>Cooled down. Still volcanic.</p></article>
+                <article><span class="row-label">05 / 126,000 PLACES</span><h3>Granite Gang.</h3><p>Takes a while to change their mind.</p></article>
+                <article><span class="row-label">06 / 168,000 PLACES</span><h3>Pumice Punks.</h3><p>Lightweights. In a good way.</p></article>
+                <article><span class="row-label">07 / 158,400 PLACES</span><h3>Pocket Pebbles.</h3><p>Travel-size trouble.</p></article>
+            </div>
+        </section>
+
+        <section class="plumbing wrap" aria-labelledby="plumbing-title">
+            <div class="plumbing-title">
+                <p class="eyebrow">THE ELDERS’ PLUMBING DEPARTMENT</p>
+                <h2 id="plumbing-title">Old stones.<br>Fresh drips.</h2>
+            </div>
+            <div class="plumbing-copy">
+                <p>The crew fills a dedicated Liquid wallet. The proposed Rai welcome is <strong>0.021 whole 600 tokens</strong>, with smaller one-time welcomes for later rock types. The original 30 elders have a separate 21-token allocation.</p>
+                <p class="muted">The funding address will appear here when the wallet is ready.</p>
+                <a class="inline-link" href="liquid.html">Explore the 600 Liquid asset <span aria-hidden="true">↗</span></a>
+            </div>
+        </section>
+
+        <section class="paid-ranks wrap" aria-labelledby="paid-title">
+            <div><p class="eyebrow">LATER / OPTIONAL / PRICED IN SATS</p><h2 id="paid-title">Pay to Polish.</h2></div>
+            <div><p>Same rock. Shinier paperwork. Optional paid ranks and collectibles are planned for later.</p>
+                <p>Your original cohort and one-time welcome stay the same. A purchase never makes you an elder or grants a second claim. Elder status stays real-life only.</p>
+                <span class="row-label">NO SALES OPEN · PRICES AND LAUNCH NOT SET</span></div>
+        </section>
+
+        <section class="plumbing wrap" aria-labelledby="raffle-title">
+            <div><p class="eyebrow">THE GUILD TOOLBOX / BUILT WITH DNI’S RAFFLE</p><h2 id="raffle-title">Paper. Rocks.<br>Party.</h2></div>
+            <div class="plumbing-copy"><p>Plan a raffle with 21 little surprises. Set the prizes, check the sats, then open the separate ticket printer for a preview PDF.</p>
+                <a class="inline-link" href="napplets/dist/raffle/index.html">Open the raffle planner ↗</a>
+                <p class="muted">Planning and preview printing work now. Real ticket funding is not connected.</p></div>
+        </section>
+
+        <section class="questions wrap" aria-labelledby="questions-title">
+            <h2 id="questions-title">A few perfectly<br>normal questions.</h2>
+            <div class="question-list">
+                <details>
+                    <summary>Am I joining a cult?<span aria-hidden="true">+</span></summary>
+                    <p>No. You’re finding the 600 Billion community on Nostr. The stones are real. The solemn ceremony is mostly a button.</p>
+                </details>
+                <details>
+                    <summary>What does connecting do?<span aria-hidden="true">+</span></summary>
+                    <p>It asks your NIP-07 browser signer for your public Nostr key. The connection stays in this tab. It does not register membership, publish a note, or claim tokens.</p>
+                </details>
+                <details>
+                    <summary>How much is the welcome?<span aria-hidden="true">+</span></summary>
+                    <p>The proposed Rai Stone amount is 0.021 whole 600 tokens, with smaller amounts for the later rock layers. Only 6,000 whole tokens were issued, so 21 each cannot cover 600,000 members. The schedule needs to be finalized before claims open. Your Nostr identity and a Liquid receiving address will be needed; the welcome is once per member, even if you buy a rank later.</p>
+                </details>
+                <details>
+                    <summary>Where do the rocks hang out?<span aria-hidden="true">+</span></summary>
+                    <p>Start with <a href="index.html#team">the crew’s Nostr profiles</a>. Private guild groups will use Marmot; invitations are not open yet. Online rock ranks do not include the private Signal group or other inner-circle access. Elders must be known in real life.</p>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer wrap">
+        <a class="wordmark" href="index.html">600<span>.wtf</span></a>
+        <p>In Adam’s name, stay grounded.</p>
+        <a class="nav-link" href="#welcome">BACK TO THE FAUCET ↑</a>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "600b-guild-napplets",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "vite build --mode raffle && vite build --mode ticket-printer",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@napplet/sdk": "0.28.0",
+    "lnurlcash-kit": "0.8.1",
+    "pdf-lib": "1.17.1",
+    "qrcode": "1.5.4"
+  },
+  "devDependencies": {
+    "@napplet/vite-plugin": "0.14.1",
+    "@types/qrcode": "1.5.5",
+    "typescript": "5.9.3",
+    "vite": "8.2.2",
+    "vite-plugin-singlefile": "2.3.3",
+    "vitest": "5.0.0"
+  }
+}
