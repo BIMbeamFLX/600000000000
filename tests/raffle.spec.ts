@@ -17,9 +17,9 @@ test('planner recalculates editable tiers and blocks invalid quantities', async 
   await expect(page.getByRole('button', { name: 'Issue real tickets' })).toBeDisabled();
 });
 
-test('standalone handoff preserves the plan and exports a genuine preview PDF', async ({ page }) => {
+test('standalone handoff preserves the plan and exports a genuine preview PDF', async ({ page, baseURL }) => {
   const external: string[] = [];
-  page.on('request', req => { if (!req.url().startsWith('http://127.0.0.1:4173')) external.push(req.url()); });
+  page.on('request', req => { if (new URL(req.url()).origin !== new URL(baseURL!).origin) external.push(req.url()); });
   await page.goto(raffle);
   await page.getByLabel('Raffle title').fill('Our rock party');
   await page.getByRole('button', { name: 'Open ticket printer' }).click();
