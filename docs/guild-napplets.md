@@ -6,6 +6,11 @@ composes independent napplets; it does not become a single guild application.
 Its host-service labels describe responsibilities, not invented SDK methods.
 The existing static pages remain previews and have not been packaged as napplets.
 
+Every catalog entry now declares its archetype status, accepted intent convention,
+versioned input fields, and outbound role-based intents. See
+[Intents and archetypes](guild-intents.md) for the wire examples, boundary rules,
+fallback behavior, source evidence, and SDK compatibility gap.
+
 ## Independent tools
 
 | Napplet | Function | Input context | Result |
