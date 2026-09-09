@@ -116,6 +116,21 @@ details p { padding-bottom: 22px; font-size: 1rem; }
 .site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 22px; align-items: center; border-top: 1px solid var(--ink); padding-block: 28px 32px; }
 .site-footer p { font-family: Georgia, serif; font-style: italic; }
 .site-footer .nav-link { font-size: .75rem; }
+.rock-family { padding-bottom: 60px; }
+.rock-family-heading { display: flex; justify-content: space-between; gap: 36px; align-items: end; margin-bottom: 30px; }
+.rock-family h2, .paid-ranks h2 { font: 400 2.2rem/1.15 'Alfa Slab One', Georgia, serif; letter-spacing: -.03em; margin-top: 14px; }
+.rock-family-heading > p { font-size: .875rem; }
+.rock-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px 40px; }
+.rock-grid article { border-top: 1px solid var(--ink); padding-top: 16px; }
+.rock-grid h3 { font: 400 1.8rem/1.2 'Anton', Impact, sans-serif; margin-block: 12px; }
+.rock-grid p { font-size: 1rem; }
+.paid-ranks { display: grid; grid-template-columns: 1fr 1.3fr; gap: 60px; padding-block: 40px; border-bottom: 1px solid var(--ink); }
+.paid-ranks p + p { margin-block: 12px 18px; }
+.guild-hall { padding-block: 60px; border-bottom: 1px solid var(--ink); }
+.guild-hall h2 { font: 400 2.2rem/1.15 'Alfa Slab One', Georgia, serif; }
+.guild-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.guild-grid article { border-top: 2px solid var(--ink); padding-top: 16px; }
+.guild-grid h3 { font: 400 1.8rem/1.2 'Anton', Impact, sans-serif; margin-block: 12px; }
 
 @media (min-width: 1450px) {
     .hero { gap: 5rem; }
@@ -132,6 +147,7 @@ details p { padding-bottom: 22px; font-size: 1rem; }
     .sacred-stone { width: 145px; }
     .stone-caption p { font-size: 1.1rem; }
     .community { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .rock-grid { grid-template-columns: 1fr 1fr; }
     .section-intro { grid-column: 1 / -1; }
     .section-intro h2 br { display: none; }
 }
@@ -157,6 +173,9 @@ details p { padding-bottom: 22px; font-size: 1rem; }
     .section-intro { grid-column: auto; }
     .section-intro h2, .plumbing h2 { font-size: 1.9rem; }
     .plumbing, .questions { grid-template-columns: 1fr; gap: 28px; }
+    .rock-family-heading { display: block; }
+    .rock-family-heading > p { margin-top: 18px; }
+    .rock-grid, .paid-ranks, .guild-grid { grid-template-columns: 1fr; gap: 28px; }
     .questions { padding-block: 45px; }
     .site-footer { align-items: start; }
     .site-footer p { order: 3; flex-basis: 100%; font-size: .9rem; }

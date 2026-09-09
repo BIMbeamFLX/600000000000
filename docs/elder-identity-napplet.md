@@ -22,6 +22,10 @@ stable membership record through the approved workflow, not by deleting its hist
 The frozen file remains a historical input; the operational SQLite ledger owns
 verified current keys, claims, and recovery decisions.
 
+All 600 elder admissions require an in-person meeting and review. Officer,
+treasurer, recovery guardian, and Marmot group administrator are separately
+assigned duties; buying a title or joining a group grants none of them.
+
 ## Napplet boundary
 
 The napplet is the review interface inside the Nappelin host. It runs sandboxed
@@ -82,6 +86,13 @@ recovery stays blocked. No operator override should be hidden behind a button.
 Recovery changes the community's identity mapping. It cannot recover an old Nostr
 private key, erase impersonation on other services, decrypt old messages, reverse
 a confirmed token payment, or recover a Liquid wallet whose keys were lost.
+
+After approved identity recovery, each affected Marmot group needs its own
+authorized removal of the compromised client and admission of the replacement,
+including the protocol's group-state/key update. A database key replacement alone
+does not revoke group access. Do not copy old MLS secrets to the replacement or
+promise recovery of chat history. FIPS node identity is independent; changing the
+member's Nostr mapping must not rotate infrastructure keys automatically.
 
 ## Required acceptance tests
 

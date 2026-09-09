@@ -6,7 +6,7 @@ operating year. Member counts are targets, not forecasts.
 
 **Approved by FLX:** 30 current elders receive 21 whole 600 tokens each; the next
 570 elders receive 2.1 each. Their combined allocation is **1,827 whole tokens**.
-Other allocations, admission targets, sale caps, and burns below are proposals.
+Also confirmed: elders are IRL only, the second layer is 21,000 Rai Stones, later layers use other rock types, and optional paid ranks/collectibles are allowed. The product is a WoW-inspired guild system on Nostr, with Marmot for private groups and FIPS mesh networking. See [the guild design](guild-system.md). Other cohort sizes, rewards, admission targets, sale caps, and burns are proposals.
 
 ## 1. The supply and the unit problem
 
@@ -49,7 +49,7 @@ All 6,000-token budget tables are conditional on the holders committing those to
 |---|---:|---:|---|
 | Original 30 elders: 30 × 21 | 630 | 10.50% | Approved allocation |
 | Future 570 elders: 570 × 2.1 | 1,197 | 19.95% | Approved allocation |
-| Pebble faucet budget | 2,100 | 35.00% | Proposed ceiling |
+| Online rock welcome budget | 2,100 | 35.00% | Proposed ceiling |
 | Optional sale inventory | 1,260 | 21.00% | Proposed ceiling |
 | General contingency | 813 | 13.55% | Proposed balance |
 | **Total** | **6,000** | **100.00%** | |
@@ -61,7 +61,7 @@ future allocation; neither can subsidize sales or burns. Release only bounded
 amounts to the payout wallet, with a separate L-BTC fee budget.
 
 Each membership has a stable record independent of its current Nostr key.
-Founder claims are limited to the frozen 30-member snapshot. Future elders are
+Founder claims are limited to the frozen 30-member snapshot. Future elders must meet the crew in person and are
 admitted separately and never inherit founding status. Buying a token grants no
 elder status, private Signal access, treasury authority, game progress, or shorter
 waiting periods.
@@ -93,40 +93,67 @@ The proposed reserve and reward figures are our design choices, not numbers deri
 from Austrian economics. Check operating assumptions annually without retroactively
 changing earned claims or spending protected elder allocations.
 
-## 4. Membership and welcome schedule
+## 4. Guild membership and the rock layers
 
-The target is **600,000 total member records: 600 elders + 599,400 Pebbles**.
-The original 30 count toward that total. This does not assume 600,000 active users,
-and multiple keys do not prove multiple humans.
+Target: **600,000 distinct member records: 600 IRL elders + 599,400 online members**.
+The original 30 count toward the 600. Online members are not all Pebbles. The
+second layer is the user-specified **21,000 Rai Stones**. Subsequent names, capacities,
+and all online reward amounts below are a proposed finite allocation.
 
-| Operating years | Total members at phase end | Elders at phase end | New Pebble slots in phase | Whole 600 per Pebble | Annual optional sale cap |
-|---|---:|---:|---:|---:|---:|
-| 1–3 | 6,000 | 30 | 5,970 | 0.021 | 0 |
-| 4–6 | 18,000 | 60 | 11,970 | 0.0105 | 210 |
-| 7–9 | 42,000 | 120 | 23,940 | 0.00525 | 105 |
-| 10–12 | 90,000 | 210 | 47,910 | 0.002625 | 52.5 |
-| 13–15 | 186,000 | 330 | 95,880 | 0.0013125 | 26.25 |
-| 16–18 | 366,000 | 450 | 179,880 | 0.00065625 | 13.125 |
-| 19–21 | 600,000 | 600 | 233,850 | 0.00032812 | 6.5625 |
+| Layer | Membership cohort | Places | Whole 600 per welcome | Total whole 600 |
+|---:|---|---:|---:|---:|
+| 1 | IRL Elders | 600 | 21 for original 30; 2.1 for next 570 | 1,827 |
+| 2 | Rai Stones | 21,000 | 0.021 | 441 |
+| 3 | Obsidian Operators | 42,000 | 0.0105 | 441 |
+| 4 | Basalt Buddies | 84,000 | 0.00525 | 441 |
+| 5 | Granite Gang | 126,000 | 0.002625 | 330.75 |
+| 6 | Pumice Punks | 168,000 | 0.0013125 | 220.5 |
+| 7 | Pocket Pebbles | 158,400 | 0.00065625 | 103.95 |
+| | **Total** | **600,000** | | **3,805.2** |
 
-The final rate is rounded **down** from 0.000328125 to the asset's eight decimal
-places. Use integer atoms for actual claims. One founder receives 2,100,000,000
-atoms; one future elder receives 210,000,000 atoms; the first Pebble rate is
-2,100,000 atoms; the final rate is 32,812 atoms.
+The online cohorts use **1,978.2** of their 2,100-token budget, leaving **121.8**
+unallocated. Every reward is exactly representable at eight decimal places.
+Use integer atoms for claims. The Rai rate is 2,100,000 atoms; the final Pocket
+Pebble rate is 65,625 atoms. Cohort size is a planned capacity, not a live member count.
 
-For a deployable policy, use the **finite membership cohorts** to select the
-Pebble rate, not an unlimited promise to everyone joining before a date. The year
-labels describe the target growth path. If growth is faster, later claimants enter
-later cohorts; if it is slower, unfilled allocations remain in reserve. Pausing
-token claims must not block participation on Nostr. The table's time path and
-yearly distributions are conditional on meeting the target.
+Rates follow the **finite online cohort order**, not the calendar. After 21,000
+Rai slots, new online admissions enter Obsidian, then Basalt, Granite, Pumice, and
+Pocket Pebbles. A year may cross several cohort boundaries; the model splits those
+grants correctly. Slower growth leaves slots unfilled and tokens in reserve.
+Nostr-key ownership alone does not prove a unique person or an IRL encounter.
 
-The arithmetic assumes disjoint direct elder/Pebble admissions. If a Pebble later
-becomes an elder, credit the already-paid welcome toward the elder's total 2.1
-allocation and reclassify that amount between budgets; do not pay a second full
-welcome. Such promotions change the annual cash-flow timing and must be reflected
-in the ledger before reforecasting. Existing founders never claim an additional
-Pebble welcome.
+| Operating years | Total members at phase end | IRL elders at phase end | Annual optional token-sale cap |
+|---|---:|---:|---:|
+| 1–3 | 6,000 | 30 | 0 |
+| 4–6 | 18,000 | 60 | 210 |
+| 7–9 | 42,000 | 120 | 105 |
+| 10–12 | 90,000 | 210 | 52.5 |
+| 13–15 | 186,000 | 330 | 26.25 |
+| 16–18 | 366,000 | 450 | 13.125 |
+| 19–21 | 600,000 | 600 | 6.5625 |
+
+The model assumes disjoint direct elder/online admissions. If an online member is
+later admitted as an IRL elder, credit the welcome already paid toward their 2.1
+total allocation, reclassify the accounting, and reforecast timing. Do not pay a
+second full welcome. Paid rank changes and key recovery never reset membership or claims.
+
+### Guild roles and Pay to Polish
+
+Stone cohorts, operational roles, and purchased titles are separate fields:
+
+- **Cohort:** original membership layer; preserves admission history and one-time allocation.
+- **Role:** member, officer, event organizer, treasurer, or recovery guardian; assigned through the approved governance process.
+- **Paid title/collectible:** an optional status or cosmetic purchase for sats. It grants no officer, treasury, recovery, IRL-elder, or game-advancement rights.
+
+The user approved paid ranks/collectibles, not paid gameplay advantages. A proposed
+later feature is **Pay to Polish**: a paid title sits on top of the original stone
+cohort. One person buying multiple collectibles is still one member. No additional
+welcome is paid. Public Nostr participation does not require buying a rank.
+
+The token-sale ceilings below cover transfers of the 600 asset from sale inventory.
+If a collectible bundle includes extra 600 tokens, count them against those same
+ceilings. Status-only sales have a separate operating-revenue ledger and no assumed
+revenue in this model. Prices, catalog, refund terms, and launch timing are not set.
 
 ## 5. Sell for sats only when a working community exists
 
@@ -189,9 +216,9 @@ funding first. After 21 years, maximum scheduled grants and sales leave:
 | Result | Whole 600 |
 |---|---:|
 | Paid to 600 elders | 1,827 |
-| Paid to 599,400 Pebbles | 823.123362 |
+| Paid to 599,400 online rocks | 1,978.2 |
 | Maximum optional sales | 1,240.3125 |
-| Treasury remaining | **2,109.564138** |
+| Treasury remaining | **954.4875** |
 | Outstanding supply | **6,000** |
 
 If the group explicitly chooses a modest true-supply reduction, an **optional**
@@ -209,7 +236,7 @@ out of the 813-token general reserve, leaving 603 there. This produces:
 | 21 | **5,790** |
 
 That is a **3.5% supply reduction**. Treasury remaining after maximum grants,
-maximum sales, and these burns is **1,899.564138**. Protected elder allocations
+maximum sales, and these burns is **744.4875**. Protected elder allocations
 remain unchanged. Burns require separately authorized, funded transactions and
 published proofs; they are not enabled by these calculations and imply no price gain.
 
@@ -220,12 +247,12 @@ published proofs; they are not enabled by these calculations and imply no price 
   and grow through invitations and actual participation. No sale funding assumed.
 - **Years 4–6:** consider capped sales only after the gates above pass. Admit future
   elders for contribution and responsibility, not their purchases. Publish accounts.
-- **Years 7–12:** halve the proposed sale caps and Pebble rates by phase. Fund
+- **Years 7–12:** halve the proposed sale caps by phase and decrease welcome rates by rock cohort. Fund
   maintained open-source tools and real community activities from realized resources.
 - **Years 13–18:** make stewardship transferable through documented succession,
   guardian rotation, independently checked accounts, and declining hot-wallet exposure.
 - **Years 19–21:** reach the target only if demand and operating capacity justify
-  it. Reconcile all 600 elder slots and 599,400 Pebble slots. Keep the residual
+  it. Reconcile all 600 elder slots and 599,400 online rock slots. Keep the residual
   treasury; there is no final-year liquidation or guaranteed member cash-out.
 
 Missed targets do not trigger extra minting, accelerated rewards, forced sales,
@@ -238,29 +265,29 @@ sale cap filled, no burns, no additional donations, no treasury-token operating
 spend, and the full issued supply committed to the model. This is an inventory
 schedule, not observed custody or a financial return forecast.
 
-| Year | Total members | Elders | Elder grants | Pebble grants | Sale cap | Treasury left |
+| Year | Total members | Elders | Elder grants | Rock grants | Sale cap | Treasury left |
 |---:|---:|---:|---:|---:|---:|---:|
 | 1 | 2,000 | 30 | 630 | 41.37 | 0 | 5,328.63 |
 | 2 | 4,000 | 30 | 0 | 42 | 0 | 5,286.63 |
 | 3 | 6,000 | 30 | 0 | 42 | 0 | 5,244.63 |
-| 4 | 10,000 | 40 | 21 | 41.895 | 210 | 4,971.735 |
-| 5 | 14,000 | 50 | 21 | 41.895 | 210 | 4,698.84 |
-| 6 | 18,000 | 60 | 21 | 41.895 | 210 | 4,425.945 |
-| 7 | 26,000 | 80 | 42 | 41.895 | 105 | 4,237.05 |
-| 8 | 34,000 | 100 | 42 | 41.895 | 105 | 4,048.155 |
-| 9 | 42,000 | 120 | 42 | 41.895 | 105 | 3,859.26 |
-| 10 | 58,000 | 150 | 63 | 41.92125 | 52.5 | 3,701.83875 |
-| 11 | 74,000 | 180 | 63 | 41.92125 | 52.5 | 3,544.4175 |
-| 12 | 90,000 | 210 | 63 | 41.92125 | 52.5 | 3,386.99625 |
-| 13 | 122,000 | 250 | 84 | 41.9475 | 26.25 | 3,234.79875 |
-| 14 | 154,000 | 290 | 84 | 41.9475 | 26.25 | 3,082.60125 |
-| 15 | 186,000 | 330 | 84 | 41.9475 | 26.25 | 2,930.40375 |
-| 16 | 246,000 | 370 | 84 | 39.34875 | 13.125 | 2,793.93 |
-| 17 | 306,000 | 410 | 84 | 39.34875 | 13.125 | 2,657.45625 |
-| 18 | 366,000 | 450 | 84 | 39.34875 | 13.125 | 2,520.9825 |
-| 19 | 444,000 | 500 | 105 | 25.576954 | 6.5625 | 2,383.843046 |
-| 20 | 522,000 | 550 | 105 | 25.576954 | 6.5625 | 2,246.703592 |
-| 21 | 600,000 | 600 | 105 | 25.576954 | 6.5625 | 2,109.564138 |
+| 4 | 10,000 | 40 | 21 | 83.79 | 210 | 4,929.84 |
+| 5 | 14,000 | 50 | 21 | 83.79 | 210 | 4,615.05 |
+| 6 | 18,000 | 60 | 21 | 83.79 | 210 | 4,300.26 |
+| 7 | 26,000 | 80 | 42 | 115.92 | 105 | 4,037.34 |
+| 8 | 34,000 | 100 | 42 | 83.79 | 105 | 3,806.55 |
+| 9 | 42,000 | 120 | 42 | 83.79 | 105 | 3,575.76 |
+| 10 | 58,000 | 150 | 63 | 167.685 | 52.5 | 3,292.575 |
+| 11 | 74,000 | 180 | 63 | 110.88 | 52.5 | 3,066.195 |
+| 12 | 90,000 | 210 | 63 | 83.8425 | 52.5 | 2,866.8525 |
+| 13 | 122,000 | 250 | 84 | 167.79 | 26.25 | 2,588.8125 |
+| 14 | 154,000 | 290 | 84 | 150.17625 | 26.25 | 2,328.38625 |
+| 15 | 186,000 | 330 | 84 | 83.895 | 26.25 | 2,134.24125 |
+| 16 | 246,000 | 370 | 84 | 157.395 | 13.125 | 1,879.72125 |
+| 17 | 306,000 | 410 | 84 | 114.620625 | 13.125 | 1,667.975625 |
+| 18 | 366,000 | 450 | 84 | 78.6975 | 13.125 | 1,492.153125 |
+| 19 | 444,000 | 500 | 105 | 100.66875 | 6.5625 | 1,279.921875 |
+| 20 | 522,000 | 550 | 105 | 51.1546875 | 6.5625 | 1,117.2046875 |
+| 21 | 600,000 | 600 | 105 | 51.1546875 | 6.5625 | 954.4875 |
 
 Reproduce with `node scripts/supply-plan.mjs`. Verify conservation, no-sale, and
 optional-burn scenarios with `node --test tests/supply-plan.test.mjs`.

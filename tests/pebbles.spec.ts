@@ -27,7 +27,14 @@ test("welcome page loads its assets and keeps payouts explicitly closed", async 
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/pebbles.html");
   await page.evaluate(() => document.fonts.ready);
-  await expect(page).toHaveTitle("The Pebbles — 600.wtf");
+  await expect(page).toHaveTitle("The Rock Garden — 600.wtf");
+  await expect(page.getByRole("heading", { name: "The Rai Stones." })).toBeVisible();
+  await expect(page.getByText("02 / 21,000 RAI STONES", { exact: true })).toBeVisible();
+  await expect(page.locator(".rock-grid article")).toHaveCount(5);
+  await expect(page.getByRole("heading", { name: "Pay to Polish." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Marmot groups." })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Explore FIPS ↗" }))
+    .toHaveAttribute("href", "https://fips.network/");
   await expect(page.getByRole("heading", { name: "Small stone. Big company." })).toBeVisible();
   await expect(page.getByRole("button", { name: "Claim · coming soon" })).toBeDisabled();
   await expect(page.getByText("FAUCET NOT OPEN YET", { exact: true })).toBeVisible();

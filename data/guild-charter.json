@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "guild_id": "600b",
+  "name": "600B Guild",
+  "target_members": 600000,
+  "state": "preview",
+  "identity": "nostr_nip07_host",
+  "groups": {
+    "protocol": "marmot",
+    "state": "not_connected",
+    "group_ids": [],
+    "relays": [],
+    "client_version": null,
+    "scope": "separate_chapters_and_parties"
+  },
+  "network": {
+    "protocol": "fips",
+    "reference": "https://fips.network/",
+    "state": "not_connected",
+    "node_public_key": null,
+    "service_endpoint": null
+  },
+  "elders": {
+    "capacity": 600,
+    "founders": 30,
+    "admission": "in_person_and_reviewed",
+    "founding_reward_atoms": 2100000000,
+    "future_reward_atoms": 210000000,
+    "reserve_atoms": 182700000000
+  },
+  "online_cohorts": [
+    {
+      "name": "Rai Stones",
+      "capacity": 21000,
+      "welcome_atoms": 2100000,
+      "capacity_status": "user_confirmed",
+      "welcome_status": "proposal"
+    },
+    {
+      "name": "Obsidian Operators",
+      "capacity": 42000,
+      "welcome_atoms": 1050000,
+      "capacity_status": "proposal",
+      "welcome_status": "proposal"
+    },
+    {
+      "name": "Basalt Buddies",
+      "capacity": 84000,
+      "welcome_atoms": 525000,
+      "capacity_status": "proposal",
+      "welcome_status": "proposal"
+    },
+    {
+      "name": "Granite Gang",
+      "capacity": 126000,
+      "welcome_atoms": 262500,
+      "capacity_status": "proposal",
+      "welcome_status": "proposal"
+    },
+    {
+      "name": "Pumice Punks",
+      "capacity": 168000,
+      "welcome_atoms": 131250,
+      "capacity_status": "proposal",
+      "welcome_status": "proposal"
+    },
+    {
+      "name": "Pocket Pebbles",
+      "capacity": 158400,
+      "welcome_atoms": 65625,
+      "capacity_status": "proposal",
+      "welcome_status": "proposal"
+    }
+  ],
+  "paid_titles": {
+    "state": "planned",
+    "name": "Pay to Polish",
+    "confers_authority": false,
+    "resets_claim": false,
+    "confers_elder_status": false
+  },
+  "roles": [
+    "member",
+    "officer",
+    "event_organizer",
+    "treasurer",
+    "recovery_guardian"
+  ],
+  "services": {
+    "applications": "not_connected",
+    "chat": "not_connected",
+    "payouts": "not_connected",
+    "events": "not_connected",
+    "recovery": "design_only"
+  }
+}
