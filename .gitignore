@@ -1,5 +1,9 @@
 *.db
 *.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.db-wal
+*.db-shm
 .env
 __pycache__/
 .ruff_cache/

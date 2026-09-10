@@ -2,7 +2,7 @@
 import { recoveryEvent } from './recovery.mjs';
 
 /** Bind to a trusted host signer with explicit signEvent consent and account-change detection. */
-export function recoveryCapability(ledger, signer, now = () => Math.floor(Date.now() / 1000)) {
+export function recoveryCapability(ledger, signer, now = () => Math.floor(Date.now() / 1000), synchronize) {
   async function scoped(caseId) {
     const pubkey = await signer.getPublicKey();
     if (!ledger.canRead(caseId, pubkey)) throw Error('Not authorized to read this recovery case');
@@ -25,7 +25,9 @@ export function recoveryCapability(ledger, signer, now = () => Math.floor(Date.n
       return ledger.inspect(caseId);
     },
     async activate({ caseId }) {
-      await scoped(caseId); ledger.activate(caseId); return ledger.inspect(caseId);
+      await scoped(caseId); ledger.activate(caseId);
+      if (synchronize) await synchronize(caseId);
+      return (await scoped(caseId)).view;
     },
   };
 }

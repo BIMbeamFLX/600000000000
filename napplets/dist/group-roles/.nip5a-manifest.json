@@ -1,0 +1,27 @@
+{
+  "kind": 35129,
+  "created_at": 1789029167,
+  "tags": [
+    [
+      "d",
+      "600b-group-roles"
+    ],
+    [
+      "path",
+      "/index.html",
+      "b607caf868603baa2349fa04abae13d7d3351e9f9cefefd72327e8ee894250f3"
+    ],
+    [
+      "x",
+      "cb1e8ae33e32a78a4ab45916cf386b924ebb7252fb8ea0e8976e29dae1cdd16d",
+      "aggregate"
+    ],
+    [
+      "archetype",
+      "group-role-manager",
+      "napplet:group-role-manager/open-v1"
+    ]
+  ],
+  "content": "",
+  "aggregateHash": "cb1e8ae33e32a78a4ab45916cf386b924ebb7252fb8ea0e8976e29dae1cdd16d"
+}

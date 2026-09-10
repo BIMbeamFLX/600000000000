@@ -8,8 +8,10 @@ wird ein eigenes **Napplet**: ein kleines Werkzeug, das einzeln funktioniert und
 sich mit anderen kombinieren lässt. Der Nutzer stellt seine Oberfläche zusammen.
 
 Heute gibt es eine bedienbare Community-Vorschau, einen separaten Elders-Desk und
-zwei Raffle-Werkzeuge zum Planen und Erstellen von Vorschau-Losbögen. Die übrigen
-Gildenfunktionen sind dokumentierte Entwürfe. Echte Auszahlungen sind geschlossen.
+zwei Raffle-Werkzeuge und einen lokalen Gilden-Workspace mit elf weiteren Napplets.
+Ortsgruppen, Termine, Aufgaben, Dienste und kosmetische Auswahl werden in SQLite
+gespeichert. Marmot, Kasse und FIPS benötigen ihre Host-Anbindung. Echte Auszahlungen
+sind geschlossen.
 
 ![Rock Garden: Nostr-Welcome und sichtbar geschlossener Faucet](docs/images/welcome-desktop.png)
 
@@ -28,11 +30,24 @@ Gildenfunktionen sind dokumentierte Entwürfe. Echte Auszahlungen sind geschloss
 | Raffle-Planer | Preisstufen, Presets, Ticketanzahl, Sats-Budget und Export eines Vorschau-Plans |
 | Ticket-Printer | Eigenständiges Werkzeug; Plan importieren, Loslayout ansehen, Vorschau-PDF herunterladen |
 | Supply-Modell | Reproduzierbare 21-Jahres-Rechnung mit ganzen atomaren Einheiten und Tests |
-| Gilden-Komposition | 16 Werkzeuggrenzen, Archetypes, Intents und Berechtigungen dokumentiert; vier Builds vorhanden; Recovery erfordert einen konfigurierten Host |
+| Gilden-Komposition | 19 Werkzeuggrenzen, 15 Builds; lokaler SQLite-Workspace und getrennte Marmot-Aktionen |
 | Marmot / FIPS / Liquid-Ausgabe | Architektur festgelegt; operative Dienste noch nicht angeschlossen |
 
 Ein angezeigter Nostr-Schlüssel ist noch keine authentifizierte Mitgliedschaft.
 Die aktuellen Seiten veröffentlichen keine Mitgliedschaft und zahlen keine Tokens aus.
+
+### Gilden-Workspace ausprobieren
+
+```sh
+node scripts/guild-workspace.mjs
+```
+
+Mit Node.js 24 unter **http://127.0.0.1:4175** öffnen. Der lokale Workspace nutzt
+fiktive Mitglieder und speichert Änderungen auf diesem Rechner. Ortsgruppen,
+Termine und Aufgaben laufen nebeneinander; jedes weitere Werkzeug lässt sich
+einzeln öffnen. [Bedienung und technische Host-Verträge](docs/guild-workspace.md).
+
+![Drei eigenständige Gilden-Napplets im lokalen Workspace](docs/images/guild-workspace-desktop.png)
 
 ## Raffle planen und Lose vorbereiten
 
@@ -151,12 +166,18 @@ signierte Installation. Dieser PR richtet keinen Produktionsdienst ein.
 npm run test:unit
 npm --prefix napplets test
 npm --prefix napplets run typecheck
+npm --prefix napplets run test:host
+npm run test:e2e:guild
 npx playwright test tests/pebbles.spec.ts tests/elders.spec.ts tests/raffle.spec.ts
 node scripts/supply-plan.mjs
 node scripts/capture-readme.mjs
+node scripts/capture-guild-workspace.mjs
 ```
 
-Der lokale Server muss für Browser-Tests und Screenshots laufen. Die Raffle-Suite
+Der statische Server muss für die bisherigen Browser-Tests und Screenshots laufen.
+Die neue Gilden-Suite startet ihren eigenen Demo-Host; bei einem bereits laufenden
+Host kann `GUILD_EXTERNAL_HOST=1` gesetzt werden. Das Workspace-Screenshot-Skript
+startet einen kurzlebigen Host mit fiktiven Daten. Die Raffle-Suite
 umfasst 39 Tests einschließlich der übernommenen Upstream-Tests. Browser-Checks
 prüfen Formularvalidierung, mobile Darstellung, PDF-Download, Intent-Übergabe und
 geschlossene Auszahlungen. Tests decken keine echte Mint-Ausgabe, Wallet-Custody
@@ -183,7 +204,7 @@ docs/                   Entscheidungen, Verträge, Quellen und Abbildungen
 | Dokument | Inhalt |
 |---|---|
 | [Gildensystem](docs/guild-system.md) | Aufnahme, Rollen, Marmot und FIPS |
-| [Composable Napplets](docs/guild-napplets.md) | Die 16 eigenständigen Funktionen |
+| [Composable Napplets](docs/guild-napplets.md) | Die 19 eigenständigen Funktionen |
 | [Intents und Archetypes](docs/guild-intents.md) | Payloads, Handlersuche, Fehlerfälle und SDK-Abgleich |
 | [Raffle-Integration](docs/raffle-integration.md) | Upstream-Herkunft, Implementierung und verbleibende Anbindungen |
 | [21-Jahres-Plan](docs/600-21-year-plan.md) | Token-Einheiten, Reserven, Szenarien und Jahresrechnung |
@@ -208,4 +229,4 @@ Charakterbilder werden durch diese Code-Lizenz nicht pauschal neu lizenziert.
 
 Details zum [Mitglieder-Napplet und seinen Intent-Grenzen](docs/member-directory.md).
 
-[Avatar-Recovery und Bearlett](docs/recovery-implementation.md) · [Web of Trust / Nostrocket](docs/recovery-trust-research.md)
+[Gilden-Workspace und Host-Verträge](docs/guild-workspace.md) · [Avatar-Recovery und Bearlett](docs/recovery-implementation.md) · [Web of Trust / Nostrocket](docs/recovery-trust-research.md)

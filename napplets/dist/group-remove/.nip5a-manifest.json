@@ -1,0 +1,27 @@
+{
+  "kind": 35129,
+  "created_at": 1789029167,
+  "tags": [
+    [
+      "d",
+      "600b-group-remove"
+    ],
+    [
+      "path",
+      "/index.html",
+      "825a8c53673fd86e1a77bed9ef4b1f6da9c1ed92a8200e8972dc46ca58d70bfd"
+    ],
+    [
+      "x",
+      "cdc51d37de08f3a02d63eac35d6849947004b1ffad94c15c48dd274d2b0b4296",
+      "aggregate"
+    ],
+    [
+      "archetype",
+      "group-removal",
+      "napplet:group-removal/open-v1"
+    ]
+  ],
+  "content": "",
+  "aggregateHash": "cdc51d37de08f3a02d63eac35d6849947004b1ffad94c15c48dd274d2b0b4296"
+}

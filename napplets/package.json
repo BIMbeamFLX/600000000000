@@ -4,10 +4,12 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "build": "vite build --mode raffle && vite build --mode ticket-printer && vite build --mode member-directory && vite build --mode key-recovery",
+    "build": "vite build --mode raffle && vite build --mode ticket-printer && vite build --mode member-directory && vite build --mode key-recovery && node build-workspace.mjs",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "test:recovery": "node --test host/*.test.mjs"
+    "test:recovery": "node --test host/*.test.mjs",
+    "build:workspace": "node build-workspace.mjs",
+    "test:host": "node --test host/*.test.mjs"
   },
   "dependencies": {
     "@napplet/sdk": "0.28.0",

@@ -1,0 +1,27 @@
+{
+  "kind": 35129,
+  "created_at": 1789029167,
+  "tags": [
+    [
+      "d",
+      "600b-group-join"
+    ],
+    [
+      "path",
+      "/index.html",
+      "a6f91e48a36473cb2e47615c77a8b0fc0fc01992c43ab043a371a7bc9d325c7e"
+    ],
+    [
+      "x",
+      "edd26cd738cd196479ee2b9fd3e40cade9e353a1c575fd98b6bee708d9cbc146",
+      "aggregate"
+    ],
+    [
+      "archetype",
+      "group-join",
+      "napplet:group-join/open-v1"
+    ]
+  ],
+  "content": "",
+  "aggregateHash": "edd26cd738cd196479ee2b9fd3e40cade9e353a1c575fd98b6bee708d9cbc146"
+}

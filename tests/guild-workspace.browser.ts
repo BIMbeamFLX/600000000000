@@ -1,0 +1,107 @@
+// SPDX-License-Identifier: MIT
+import { test, expect } from '@playwright/test';
+
+test('chapters, events and tasks persist and work after a sibling is unmounted', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1100 });
+  const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/');
+  const chapter = page.frameLocator('[data-tool="chapters"]');
+  const calendar = page.frameLocator('[data-tool="calendar"]');
+  const tasks = page.frameLocator('[data-tool="tasks"]');
+  const suffix = Date.now().toString();
+  await chapter.getByLabel('Title', { exact: true }).fill(`Vienna ${suffix}`);
+  await chapter.getByLabel('Place or city').fill('Vienna');
+  await chapter.getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(chapter.getByRole('heading', { name: `Vienna ${suffix}`, exact: true })).toBeVisible();
+  const id = (await chapter.locator('article').filter({ hasText: `Vienna ${suffix}` }).locator('small').innerText()).slice('Chapter ID: '.length);
+  await calendar.getByLabel('Title', { exact: true }).fill(`Stammtisch ${suffix}`);
+  await calendar.getByLabel('Chapter ID (optional)').fill(id);
+  await calendar.getByLabel('Starts at').fill('2026-09-21T18:00');
+  await calendar.getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(calendar.getByRole('heading', { name: `Stammtisch ${suffix}` })).toBeVisible();
+  await page.locator('[data-tool="chapters"]').evaluate(node => node.remove());
+  await tasks.getByLabel('Title', { exact: true }).fill(`Bring chairs ${suffix}`);
+  await tasks.getByRole('button', { name: 'Save', exact: true }).click();
+  const card = tasks.locator('article').filter({ hasText: `Bring chairs ${suffix}` });
+  await card.getByRole('button', { name: 'Mark done' }).click();
+  await expect(card.getByText('done', { exact: true })).toBeVisible();
+  await page.reload();
+  await expect(chapter.getByRole('heading', { name: `Vienna ${suffix}`, exact: true })).toBeVisible();
+  await expect(card.getByText('done', { exact: true })).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test('duties and cosmetic previews are separate, while purchases stay closed', async ({ page }) => {
+  await page.goto('/?tools=roles,cosmetics');
+  const duties = page.frameLocator('[data-tool="roles"]');
+  await duties.getByLabel('Member ID').fill('demo-member');
+  await duties.getByRole('combobox', { name: 'Duty' }).selectOption('treasurer');
+  await duties.getByRole('button', { name: 'Assign duty' }).click();
+  await expect(duties.locator('article').filter({ hasText: 'demo-member' })).toContainText('treasurer');
+  const polish = page.frameLocator('[data-tool="cosmetics"]');
+  await polish.getByRole('button', { name: 'Polished stone', exact: true }).click();
+  await expect(polish.getByRole('heading', { name: 'Polished stone', exact: true })).toBeVisible();
+  await expect(polish.getByRole('button', { name: /checkout unavailable/ })).toBeDisabled();
+  await duties.getByRole('button', { name: 'Remove duty' }).click();
+  await expect(duties.locator('article').filter({ hasText: 'demo-member' })).not.toContainText('treasurer');
+});
+
+test('all four Marmot tools and external status views fail closed without adapters', async ({ page }) => {
+  await page.goto('/?tools=group-invite,group-join,group-remove,group-roles,treasury,fips');
+  for (const mode of ['group-invite', 'group-join', 'group-remove', 'group-roles']) {
+    const frame = page.frameLocator(`[data-tool="${mode}"]`);
+    await expect(frame.getByRole('status')).toHaveText('Marmot client unavailable.');
+    await expect(frame.getByRole('button', { name: /^Request / })).toBeDisabled();
+  }
+  await expect(page.frameLocator('[data-tool="fips"]').getByRole('status')).toHaveText('fips adapter unavailable');
+  await expect(page.frameLocator('[data-tool="treasury"]').getByRole('status')).toHaveText('treasury adapter unavailable');
+});
+
+test('each independent tool fits mobile and has no stand-alone capability', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const mode of ['chapters', 'calendar', 'tasks', 'roles', 'cosmetics', 'treasury', 'fips', 'group-invite', 'group-join', 'group-remove', 'group-roles']) {
+    await page.goto(`/?tools=${mode}`);
+    const frame = page.frameLocator('iframe');
+    await expect(frame.getByRole('heading', { level: 1 })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    expect(await frame.locator('body').evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
+  await page.goto('/tool/tasks');
+  await expect(page.getByRole('status')).toContainText('Open in the guild workspace');
+  await expect(page.getByRole('button', { name: 'Save', exact: true })).toBeDisabled();
+});
+
+test('demo API rejects calls without its host token or with another origin', async ({ request }) => {
+  const data = { tool: 'roles', method: 'read' };
+  expect((await request.post('/api', { data })).status()).toBe(403);
+  expect((await request.post('/api', { data, headers: { Origin: 'https://evil.invalid', 'X-Guild-Demo': 'fake' } })).status()).toBe(403);
+  expect((await request.get('/tool/../private.sqlite')).status()).toBe(404);
+});
+
+test('Marmot UI restores an uncertain request and reconciles its original ID', async ({ page }) => {
+  let pending: Record<string, unknown> | undefined; const calls: Record<string, unknown>[] = [];
+  await page.exposeFunction('fixtureRead', () => ({ available: true, pending: pending ? [pending] : [] }));
+  await page.exposeFunction('fixtureGroup', (request: Record<string, unknown>) => {
+    calls.push(request);
+    if (!pending) { pending = request; return { state: 'uncertain' }; }
+    pending = undefined; return { state: 'confirmed', receiptId: 'fixture-mls-commit' };
+  });
+  await page.addInitScript(() => {
+    const fixture = window as any;
+    Object.defineProperty(window, 'napplet', { configurable: true, get: () => ({ guild: {
+      read: () => fixture.fixtureRead(), group: (request: unknown) => fixture.fixtureGroup(request),
+    } }), set: () => {} });
+  });
+  await page.goto('/?tools=group-invite');
+  const frame = page.frameLocator('iframe');
+  await frame.getByLabel('Host group reference').fill('group-1');
+  await frame.getByLabel('Member ID').fill('demo-member');
+  await frame.getByRole('button', { name: 'Request invite', exact: true }).click();
+  await expect(frame.getByRole('status')).toContainText('Outcome uncertain');
+  await page.reload();
+  await expect(frame.getByRole('status')).toContainText('Pending request restored');
+  await expect(frame.getByLabel('Host group reference')).toBeDisabled();
+  await frame.getByRole('button', { name: 'Check pending request' }).click();
+  await expect(frame.getByRole('status')).toHaveText('Confirmed by the Marmot client.');
+  expect(calls).toHaveLength(2); expect(calls[1]).toEqual(calls[0]);
+});
