@@ -169,6 +169,15 @@ test('account switches during adapter authorization or reading discard results',
   actor = officer;
   const treasury = guildCapability(f.store, f.journal, () => actor, 'treasury', { treasury: { read: async () => { actor = member; return { assets: [] }; } } });
   await assert.rejects(() => treasury.read(), /Identity changed/);
+  actor = officer;
+  const chat = guildCapability(f.store, f.journal, () => actor, 'group-chat', {
+    marmot: {
+      protocol: 'marmot', authorize: async () => true, execute: async () => ({}), status: async () => ({}),
+      listGroups: async () => [{ groupId: 'group-1', name: 'clan' }],
+      listMessages: async () => { actor = member; return []; },
+    },
+  });
+  await assert.rejects(() => chat.read(), /Identity changed/);
 });
 
 test('shuffled request keys share a digest; retry uses status and confirms once', async t => {

@@ -19,10 +19,13 @@ node scripts/guild-workspace.mjs
 ```
 
 Open **http://127.0.0.1:4175**. The default layout places chapters, calendar and
-tasks side by side. The navigation opens each other tool independently. The
-organizer and member are fictional; changes persist in `.guild-demo.sqlite`.
-`GUILD_DEMO_DB` selects a different local database and `GUILD_PORT` changes the port.
-This loopback server has no production login and must not be reverse-proxied.
+tasks side by side. The navigation opens each other tool independently. When
+Hangar loads, the organizer id is the throwaway Marmot pubkey from
+`.guild-marmot-secret` / `MARMOT_SECRET` — use that hex id for invite/join.
+`demo-member` is a local GuildStore row only, not an MLS client. Changes persist
+in `.guild-demo.sqlite`. `GUILD_DEMO_DB` selects a different local database and
+`GUILD_PORT` changes the port. This loopback server has no production login and
+must not be reverse-proxied.
 
 ![Local guild workspace with independent tools](images/guild-workspace-desktop.png)
 

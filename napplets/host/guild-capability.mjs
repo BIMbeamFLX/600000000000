@@ -32,11 +32,11 @@ export function guildCapability(store, journal, actor, tool, adapters = {}) {
         const marmot = adapters.marmot;
         const available = marmotReady(marmot) && typeof marmot.listGroups === 'function';
         if (!available) return { available: false, groups: [], messages: [], pending: [] };
-        if (typeof marmot.ingest === 'function') await marmot.ingest().catch(() => {});
         const source = principal();
+        if (typeof marmot.ingest === 'function') await marmot.ingest().catch(() => {});
+        requireValue(principal().memberId === source.memberId && principal().version === source.version, 'Identity changed');
         const listed = await marmot.listGroups();
-        const current = principal();
-        requireValue(current.memberId === source.memberId && current.version === source.version, 'Identity changed');
+        requireValue(principal().memberId === source.memberId && principal().version === source.version, 'Identity changed');
         const groups = (Array.isArray(listed) ? listed : []).slice(0, 100).flatMap(group => {
           if (!group || typeof group.groupId !== 'string' || !group.groupId) return [];
           return [{ groupId: group.groupId, name: typeof group.name === 'string' ? group.name.slice(0, 80) : '' }];
@@ -45,12 +45,14 @@ export function guildCapability(store, journal, actor, tool, adapters = {}) {
         if (typeof marmot.listMessages === 'function') {
           for (const group of groups) {
             const batch = await marmot.listMessages(group.groupId);
+            requireValue(principal().memberId === source.memberId && principal().version === source.version, 'Identity changed');
             for (const row of Array.isArray(batch) ? batch : []) {
               const message = plaintextMessage(row, group.groupId);
               if (message) messages.push(message);
             }
           }
         }
+        requireValue(principal().memberId === source.memberId && principal().version === source.version, 'Identity changed');
         messages.sort((a, b) => a.createdAt - b.createdAt || a.id.localeCompare(b.id));
         return { available: true, groups, messages: messages.slice(-200), pending: journal.pending(principal(), 'chat') };
       }
