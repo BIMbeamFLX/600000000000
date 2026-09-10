@@ -12,13 +12,16 @@ export function groupTool(action: 'invite' | 'join' | 'remove' | 'role', slug: s
   const perform = async () => {
     if (!pending && (![groupId.value, memberId.value].every(value => /^[a-zA-Z0-9_-]{1,128}$/.test(value)) || (role && !['member', 'moderator'].includes(role.value)))) throw Error('Enter valid host references and a supported role.');
     pending ??= { requestId: crypto.randomUUID(), groupId: groupId.value, memberId: memberId.value, role: role?.value ?? '' };
+    const submitted = pending;
     lock(true); submit.disabled = true; cancelBtn.disabled = !service;
-    const result = await service!.group(pending) as { state: string };
+    const result = await service!.group(submitted) as { state: string };
+    if (pending !== submitted) return;
     if (result.state === 'confirmed') {
       pending = null; lock(false); cancelBtn.disabled = true;
       await restore();
       return 'Confirmed by the Marmot client.';
     }
+    cancelBtn.disabled = !service;
     return 'Outcome uncertain. Check this same request; it will not be sent again automatically.';
   };
   const submit = button(panel, `Request ${action}`, false, () => void run(perform));
@@ -26,13 +29,15 @@ export function groupTool(action: 'invite' | 'join' | 'remove' | 'role', slug: s
     if (!pending) { status.textContent = 'No pending request.'; return; }
     void run(perform);
   });
-  const cancelBtn = button(panel, 'Cancel pending request', false, () => void run(async () => {
-    if (!pending || !service) throw Error('No pending request.');
-    await service.cancel({ requestId: String(pending.requestId) });
-    pending = null; lock(false); cancelBtn.disabled = true;
-    await restore();
-    return 'Pending request cancelled. You can start a new action.';
-  }));
+  const cancelBtn = button(panel, 'Cancel pending request', false, () => {
+    if (!pending || !service) { status.textContent = 'No pending request.'; return; }
+    const requestId = String(pending.requestId);
+    void service.cancel({ requestId }).then(async () => {
+      pending = null; lock(false); cancelBtn.disabled = true;
+      await restore();
+      status.textContent = 'Pending request cancelled. You can start a new action.';
+    }).catch((error: Error) => { status.textContent = error.message; });
+  });
   panel.append(el('p', 'Group membership and encrypted MLS state remain in the Marmot client. No public-chat fallback.', 'muted'));
   const restore = async () => {
     const value = await service!.read() as { available?: boolean; pending?: Record<string, unknown>[] };

@@ -48,7 +48,7 @@ export function guildCapability(store, journal, actor, tool, adapters = {}) {
       principal(); requireValue(groupActions[tool], 'No group authority for this tool');
       requireValue(request && Object.keys(request).sort().join(',') === 'requestId', 'Invalid cancel');
       boundedId(request.requestId);
-      return journal.cancel(request.requestId, principal());
+      return journal.cancel(request.requestId, principal(), groupActions[tool]);
     },
   };
 }

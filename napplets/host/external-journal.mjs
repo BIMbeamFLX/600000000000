@@ -42,11 +42,12 @@ export class ExternalJournal {
     try {
       const current = this.#load(id)?.state;
       if (current === 'confirmed' || current === 'cancelled' || current === 'rejected') {
-        this.#db.exec('COMMIT'); return;
+        this.#db.exec('COMMIT'); return false;
       }
       this.#db.prepare('INSERT INTO external_audit(at,job,state) VALUES (?,?,?)').run(Date.now(), id, state);
       this.#db.prepare('UPDATE external_jobs SET state=?,result=? WHERE id=?').run(state, JSON.stringify(result), id);
       this.#db.exec('COMMIT');
+      return true;
     } catch (error) { this.#db.exec('ROLLBACK'); throw error; }
   }
   #rejectPrepared(id) {
@@ -78,10 +79,23 @@ export class ExternalJournal {
     if (typeof request.groupId !== 'string' || !request.groupId) return;
     for (const row of this.#db.prepare(`SELECT id,request FROM external_jobs WHERE ${OPEN}`).all()) {
       if (row.id === requestId) continue;
-      if (JSON.parse(row.request)?.groupId === request.groupId) throw Error('Group operation already in flight');
+      const other = JSON.parse(row.request);
+      if (other?.groupId !== request.groupId) continue;
+      if (Number.isSafeInteger(other.identityVersion) && Number.isSafeInteger(request.identityVersion)
+        && other.identityVersion !== request.identityVersion) continue;
+      throw Error('Group operation already in flight');
     }
   }
-  cancel(requestId, actor) {
+  #outcome(id, fallback) {
+    const job = this.#load(id);
+    if (job?.state === 'cancelled') throw Error('Request was cancelled');
+    if (job?.state === 'confirmed') {
+      const stored = JSON.parse(job.result);
+      return { state: 'confirmed', receiptId: stored.receiptId };
+    }
+    return fallback;
+  }
+  cancel(requestId, actor, expectedAction) {
     boundedId(requestId);
     requireValue(actor && Number.isSafeInteger(actor.version), 'Identity session revoked');
     this.#db.exec('BEGIN IMMEDIATE');
@@ -91,7 +105,9 @@ export class ExternalJournal {
       requireValue(job.state !== 'confirmed', 'Confirmed jobs cannot be cancelled');
       requireValue(job.state !== 'cancelled', 'Request already cancelled');
       const request = JSON.parse(job.request);
-      requireValue(request?.actorId === actor.memberId && request.identityVersion === actor.version, 'Not authorized to cancel this request');
+      requireValue(request?.actorId === actor.memberId, 'Not authorized to cancel this request');
+      requireValue(Number.isSafeInteger(request.identityVersion) && request.identityVersion <= actor.version, 'Not authorized to cancel this request');
+      if (expectedAction) requireValue(request.action === expectedAction, 'Tool cannot cancel this request');
       this.#db.prepare('INSERT INTO external_audit(at,job,state) VALUES (?,?,?)').run(Date.now(), requestId, 'cancelled');
       this.#db.prepare("UPDATE external_jobs SET state='cancelled' WHERE id=?").run(requestId);
       this.#db.exec('COMMIT');
@@ -104,7 +120,7 @@ export class ExternalJournal {
       result = execute ? await adapter.execute(request) : await adapter.status(request);
     } catch {
       this.#record(request.requestId, 'uncertain');
-      return { state: 'uncertain' };
+      return this.#outcome(request.requestId, { state: 'uncertain' });
     }
     try {
       await authorize();
@@ -112,12 +128,12 @@ export class ExternalJournal {
     } catch (error) {
       if (error?.message === 'External confirmation pending') {
         this.#record(request.requestId, 'uncertain');
-        return { state: 'uncertain' };
+        return this.#outcome(request.requestId, { state: 'uncertain' });
       }
       throw error;
     }
     this.#record(request.requestId, 'confirmed', { receiptId: result.receiptId });
-    return { state: 'confirmed', receiptId: result.receiptId };
+    return this.#outcome(request.requestId, { state: 'confirmed', receiptId: result.receiptId });
   }
   async run(request, adapter, authorize) {
     boundedId(request.requestId);

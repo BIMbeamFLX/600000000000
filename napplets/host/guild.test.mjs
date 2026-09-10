@@ -212,6 +212,39 @@ test('cancel removes pending group jobs and allows a new request', async t => {
   assert.deepEqual(await invite.group({ ...group, requestId: 'invitation-3' }), { state: 'uncertain' });
   assert.deepEqual(await invite.cancel({ requestId: 'invitation-3' }), { state: 'cancelled' });
   assert.deepEqual((await invite.read()).pending, []);
+  const join = tool('group-join');
+  assert.deepEqual(await join.group({ requestId: 'join-1', groupId: 'group-1', memberId: 'officer', role: '' }), { state: 'uncertain' });
+  await assert.rejects(() => invite.cancel({ requestId: 'join-1' }), /cannot cancel/);
+  assert.deepEqual(await join.cancel({ requestId: 'join-1' }), { state: 'cancelled' });
+});
+
+test('cancel during execute does not report confirmed', async t => {
+  const { journal } = fixture(t);
+  let release; let entered;
+  const started = new Promise(resolve => { entered = resolve; });
+  const wait = new Promise(resolve => { release = resolve; });
+  const request = { ...group, action: 'invite', actorId: 'officer', identityVersion: 1 };
+  const adapter = {
+    execute: async () => { entered(); await wait; return { confirmed: true, receiptId: 'too-late' }; },
+    status: async () => ({ confirmed: true, receiptId: 'too-late' }),
+  };
+  const running = journal.run(request, adapter, async () => {});
+  await started;
+  assert.deepEqual(journal.cancel(request.requestId, officer), { state: 'cancelled' });
+  release();
+  await assert.rejects(() => running, /cancelled/);
+  assert.deepEqual(journal.pending(officer, 'invite'), []);
+  const next = { ...request, requestId: 'invite-after-cancel-race' };
+  assert.equal((await journal.run(next, { execute: async () => ({ confirmed: true, receiptId: 'fresh' }), status: async () => ({}) }, async () => {})).state, 'confirmed');
+});
+
+test('stale identityVersion jobs do not deadlock a groupId queue', async t => {
+  const { journal } = fixture(t);
+  const v1 = { ...group, action: 'invite', actorId: 'officer', identityVersion: 1 };
+  await journal.run(v1, { execute: async () => { throw Error('lost'); }, status: async () => ({}) }, async () => {});
+  const v2 = { ...group, requestId: 'invite-v2', action: 'invite', actorId: 'officer', identityVersion: 2 };
+  assert.equal((await journal.run(v2, { execute: async () => ({ confirmed: true, receiptId: 'epoch-2' }), status: async () => ({}) }, async () => {})).state, 'confirmed');
+  assert.deepEqual(journal.cancel(v1.requestId, { memberId: 'officer', version: 2 }), { state: 'cancelled' });
 });
 
 test('adapter receipts require confirmed plus receiptId; unconfirmed results stay uncertain', async t => {
