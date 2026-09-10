@@ -1,7 +1,7 @@
 # Guild intents and archetypes
 
 Contract design, 9 September 2026. Catalog: `data/guild-napplets.json`.
-Most contracts are designs. The two Raffle builds have local manifest metadata
+Most contracts are designs. The directory and two Raffle builds have local manifest metadata
 and fixture-tested intent handling, but are not installed on a production host.
 Every new role/convention below is
 a local proposal unless explicitly marked as an upstream draft.

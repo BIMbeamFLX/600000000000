@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "state": "design_catalog_with_two_preview_builds",
-  "note": "16 function boundaries; two Raffle preview builds. See implementation fields for actual advertised contracts. Other services remain designs.",
+  "state": "design_catalog_with_three_preview_builds",
+  "note": "16 function boundaries; three preview builds: member directory, Raffle planner and ticket printer. Operational services remain designs.",
   "napplets": [
     {
       "id": "guild-roster",
@@ -38,7 +38,23 @@
           "archetype": "identity-review",
           "convention": "napplet:identity-review/open-v1"
         }
-      ]
+      ],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/member-directory/index.html",
+        "manifest": "napplets/dist/member-directory/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:member-directory/open-v1"
+        ],
+        "optional_dispatches": [
+          {
+            "archetype": "identity-review",
+            "convention": "napplet:identity-review/open-v1",
+            "availability": "requires_compatible_host_handler"
+          }
+        ],
+        "scope": "Public founding snapshot only; no live identity verification or membership authority."
+      }
     },
     {
       "id": "guild-admissions",

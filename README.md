@@ -23,10 +23,11 @@ Gildenfunktionen sind dokumentierte Entwürfe. Echte Auszahlungen sind geschloss
 |---|---|
 | Rock Garden | Responsive Welcome-Seite; NIP-07 liest einen öffentlichen Schlüssel für die lokale Anzeige |
 | Elders-Desk | Eingefrorenes Verzeichnis der 30 Gründer; Schlüsselabgleich; Claims bleiben gesperrt |
+| Mitglieder-Napplet | Durchsuchbare Gründerliste, aufgezeichneter Prüfstatus, optionaler Identity-Review-Intent |
 | Raffle-Planer | Preisstufen, Presets, Ticketanzahl, Sats-Budget und Export eines Vorschau-Plans |
 | Ticket-Printer | Eigenständiges Werkzeug; Plan importieren, Loslayout ansehen, Vorschau-PDF herunterladen |
 | Supply-Modell | Reproduzierbare 21-Jahres-Rechnung mit ganzen atomaren Einheiten und Tests |
-| Gilden-Komposition | 16 Werkzeuggrenzen, Archetypes, Intents und Berechtigungen dokumentiert; zwei Preview-Builds vorhanden |
+| Gilden-Komposition | 16 Werkzeuggrenzen, Archetypes, Intents und Berechtigungen dokumentiert; drei Preview-Builds vorhanden |
 | Marmot / FIPS / Liquid-Ausgabe | Architektur festgelegt; operative Dienste noch nicht angeschlossen |
 
 Ein angezeigter Nostr-Schlüssel ist noch keine authentifizierte Mitgliedschaft.
@@ -95,7 +96,7 @@ LNURLcash-Raffle-Sats und die Liquid-Reserve werden getrennt behandelt.
 [Architekturentscheidung](docs/guild-system.md)
 
 - **Napplets:** eine Funktion pro Bundle; voneinander unabhängig, ohne gemeinsamen
-  DOM- oder Speicherzugriff. Raffle-Planer und Printer liegen als einzelne HTML-Builds vor.
+  DOM- oder Speicherzugriff. Mitgliederverzeichnis, Raffle-Planer und Printer liegen als einzelne HTML-Builds vor.
 - **Archetypes und NAP-INTENT:** der Aufrufer nennt Rolle und Vertrag. Der Host
   wählt den Handler; empfangene Daten werden validiert. Gildenspezifische Rollen
   sind Vorschläge und werden nicht als anerkannte Standards ausgegeben.
@@ -134,6 +135,7 @@ uv run --no-project python -m http.server 4173 --bind 127.0.0.1
 |---|---|
 | Rock Garden | <http://127.0.0.1:4173/pebbles.html> |
 | Elders-Desk | <http://127.0.0.1:4173/elders.html> |
+| Mitgliederverzeichnis | <http://127.0.0.1:4173/napplets/dist/member-directory/index.html> |
 | Raffle-Planer | <http://127.0.0.1:4173/napplets/dist/raffle/index.html> |
 | Ticket-Printer | <http://127.0.0.1:4173/napplets/dist/ticket-printer/index.html> |
 
@@ -167,9 +169,9 @@ vorhandene Fehler werden im PR getrennt von der Feature-Prüfung ausgewiesen.
 ```text
 pebbles.* / elders.*     Community-Vorschau und Gründer-Desk
 data/                   Roster-Snapshot, Charta und Napplet-Katalog
-napplets/src/           Raffle- und Printer-Implementierung, Boundary-Validierung
+napplets/src/           Directory-, Raffle- und Printer-Implementierung
 napplets/vendor/        Unveränderter, gepinnter Upstream-Quellstand
-napplets/dist/          Zwei gebaute HTML-Napplets mit Manifest-Metadaten
+napplets/dist/          Drei gebaute HTML-Napplets mit Manifest-Metadaten
 scripts/                Supply-Rechnung und reproduzierbare Screenshots
 tests/                  Browser-, Katalog- und Modelltests
 docs/                   Entscheidungen, Verträge, Quellen und Abbildungen
@@ -200,3 +202,7 @@ Abhängigkeiten in [THIRD_PARTY_NOTICES.md](napplets/THIRD_PARTY_NOTICES.md). Vo
 Charakterbilder werden durch diese Code-Lizenz nicht pauschal neu lizenziert.
 
 *wir foan a aundas program.*
+
+![Mitgliederverzeichnis](docs/images/member-directory-desktop.png)
+
+Details zum [Mitglieder-Napplet und seinen Intent-Grenzen](docs/member-directory.md).
