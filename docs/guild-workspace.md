@@ -1,7 +1,8 @@
 # Guild workspace
 
 Current release priority (10 September 2026): real Marmot groups first.
-**The messenger is White Noise.** Hangar + Alby (NIP-07) is the real login.
+**The messenger is White Noise.** Real login is Hangar with Alby (NIP-07) **or**
+a Keycast bunker (NIP-46). `.guild-marmot-secret` is not for real people.
 Meetups and the other guild extras can follow later. See the
 [Grok audit handoff and production acceptance criteria](grok-marmot-audit-handoff.md).
 
@@ -25,7 +26,8 @@ tasks side by side. The navigation opens each other tool independently.
 This Node host is **test/offline only**. Set `MARMOT_RELAYS=off` for e2e, or a
 throwaway `MARMOT_SECRET` / `.guild-marmot-secret` for local Marmot wiring.
 Real people do **not** use that file secret, a second `GUILD_DEMO_DB`, or
-`demo-member`. Log in with Hangar and Alby (or any `window.nostr` signer).
+`demo-member`. Log in with Hangar and Alby (or any `window.nostr` signer), or
+paste a Keycast `bunker://` invitation in Hangar.
 Invite a hex pubkey / npub that runs White Noise and has published a Marmot
 KeyPackage. `demo-member` is a local GuildStore row only, not an MLS client.
 
@@ -145,11 +147,11 @@ MARMOT_SECRET=
 ```
 
 This Node throwaway is **not** how two people chat. The second person is a
-second Alby / White Noise account, not a second SQLite file. MLS state for this
+second Alby / Keycast / White Noise account, not a second SQLite file. MLS state for this
 offline host lives in `.guild-marmot/<pubkey>/`. Napplet frames never see MLS
 secrets, key packages or Welcome bytes. Set `MARMOT_RELAYS=off` to run the
-loopback host without an adapter. Real login is Hangar + Alby, which publishes
-a KeyPackage so White Noise can add that identity.
+loopback host without an adapter. Real login is Hangar + Alby **or** a Keycast
+bunker, which publishes a KeyPackage so White Noise can add that identity.
 
 `ExternalJournal` hashes a canonical encoding of each request so key order cannot
 fork resume. Authorize/validation failures before `execute` propagate and reject
