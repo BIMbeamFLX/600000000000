@@ -2,17 +2,27 @@
 import { tool, field, button } from './workspace-ui';
 import { el } from './ui';
 /** One mounted group action, never a shared group-admin application. */
-export function groupTool(action: 'invite' | 'join' | 'remove' | 'role', slug: string, title: string) {
+export function groupTool(action: 'invite' | 'join' | 'remove' | 'role' | 'create', slug: string, title: string) {
   const { panel, service, status, run } = tool(title, 'The host checks group permissions and delegates to Marmot. Unknown results must be reconciled before another action.', slug);
-  const groupId = field(panel, 'Host group reference'); const memberId = field(panel, action === 'join' ? 'Your member ID' : 'Member ID');
+  const name = action === 'create' ? field(panel, 'Group name') : null;
+  const groupId = action === 'create' ? null : field(panel, 'Host group reference');
+  const memberId = action === 'create' ? null : field(panel, action === 'join' ? 'Your member ID' : 'Member ID');
   const role = action === 'role' ? field(panel, 'Group role: member or moderator') : null;
   let pending: Record<string, unknown> | null = null;
   let inFlight: Promise<unknown> | null = null;
-  const fields = () => [groupId, memberId, role];
+  const fields = () => [name, groupId, memberId, role];
   const lock = (locked: boolean) => { for (const field of fields()) if (field) field.disabled = locked; };
   const perform = async () => {
-    if (!pending && (![groupId.value, memberId.value].every(value => /^[a-zA-Z0-9_-]{1,128}$/.test(value)) || (role && !['member', 'moderator'].includes(role.value)))) throw Error('Enter valid host references and a supported role.');
-    pending ??= { requestId: crypto.randomUUID(), groupId: groupId.value, memberId: memberId.value, role: role?.value ?? '' };
+    if (!pending) {
+      if (action === 'create') {
+        if (!name || !name.value.trim() || name.value.length > 80) throw Error('Enter a group name.');
+      } else if (![groupId!.value, memberId!.value].every(value => /^[a-zA-Z0-9_-]{1,128}$/.test(value)) || (role && !['member', 'moderator'].includes(role.value))) {
+        throw Error('Enter valid host references and a supported role.');
+      }
+    }
+    pending ??= action === 'create'
+      ? { requestId: crypto.randomUUID(), groupId: '', memberId: '', role: '', name: name!.value.trim() }
+      : { requestId: crypto.randomUUID(), groupId: groupId!.value, memberId: memberId!.value, role: role?.value ?? '' };
     const submitted = pending;
     lock(true); submit.disabled = true; cancelBtn.disabled = !service;
     const work = service!.group(submitted) as Promise<{ state: string }>;
@@ -55,8 +65,11 @@ export function groupTool(action: 'invite' | 'join' | 'remove' | 'role', slug: s
     submit.disabled = !value?.available;
     const saved = value.pending?.[0];
     if (saved) {
-      pending = saved; groupId.value = String(saved.groupId); memberId.value = String(saved.memberId);
-      if (role) role.value = String(saved.role);
+      pending = saved;
+      if (groupId) groupId.value = String(saved.groupId ?? '');
+      if (memberId) memberId.value = String(saved.memberId ?? '');
+      if (name && saved.name) name.value = String(saved.name);
+      if (role) role.value = String(saved.role ?? '');
       lock(true); submit.disabled = true; cancelBtn.disabled = false;
       status.textContent = 'Pending request restored. Check its result before starting another action.';
       return;

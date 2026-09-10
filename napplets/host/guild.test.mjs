@@ -72,13 +72,62 @@ test('Marmot absence, group permission and self-join are enforced in the host', 
   const f = fixture(t);
   assert.equal((await f.tool('group-invite').read()).available, false);
   await assert.rejects(() => f.tool('group-invite').group(group), /unavailable/);
+  await assert.rejects(() => f.tool('group-chat').chat({ requestId: 'chat-1', groupId: 'group-1', content: 'hello' }), /unavailable/);
   let executions = 0;
   const adapters = { marmot: { protocol: 'marmot', authorize: async () => false, execute: async () => { executions++; }, status: async () => ({}) } };
   const secured = fixture(t, adapters);
   await assert.rejects(() => secured.tool('group-invite').group(group), /not authorized/);
   await assert.rejects(() => secured.tool('group-join').group(group), /current member/);
   await assert.rejects(() => secured.tool('tasks').group(group), /No group authority/);
+  await assert.rejects(() => secured.tool('group-chat').group(group), /No group authority/);
+  await assert.rejects(() => secured.tool('group-invite').chat({ requestId: 'chat-1', groupId: 'group-1', content: 'hello' }), /No chat authority/);
   assert.equal(executions, 0);
+});
+
+test('chat is tool-scoped, rejected without marmot, and fixture send appears in history', async t => {
+  const history = [];
+  const adapters = {
+    marmot: {
+      protocol: 'marmot',
+      authorize: async () => true,
+      execute: async request => {
+        if (request.action !== 'chat') throw Error('unexpected');
+        history.push({ id: `evt-${request.requestId}`, groupId: request.groupId, pubkey: 'aa'.repeat(32), content: request.content, createdAt: 1 });
+        return { confirmed: true, receiptId: `evt-${request.requestId}` };
+      },
+      status: async () => ({}),
+      listGroups: async () => [{ groupId: 'group-1', name: 'clan' }],
+      listMessages: async () => history,
+    },
+  };
+  const f = fixture(t, adapters);
+  await assert.rejects(() => f.tool('group-invite').chat({ requestId: 'chat-1', groupId: 'group-1', content: 'hello' }), /No chat authority/);
+  await assert.rejects(() => f.tool('group-chat').group(group), /No group authority/);
+  const sent = await f.tool('group-chat').chat({ requestId: 'chat-1', groupId: 'group-1', content: 'hello' });
+  assert.equal(sent.state, 'sent');
+  const snapshot = await f.tool('group-chat').read();
+  assert.equal(snapshot.available, true);
+  assert.equal(snapshot.messages.some(item => item.content === 'hello'), true);
+  assert.equal(snapshot.messages.every(item => Object.keys(item).sort().join(',') === 'content,createdAt,groupId,id,pubkey'), true);
+});
+
+test('group-create accepts an empty groupId and invite cannot create', async t => {
+  const adapters = {
+    marmot: {
+      protocol: 'marmot',
+      authorize: async () => true,
+      execute: async request => ({ confirmed: true, receiptId: request.action === 'create' ? 'new-group' : 'nope' }),
+      status: async () => ({}),
+    },
+  };
+  const f = fixture(t, adapters);
+  const created = await f.tool('group-create').group({ requestId: 'create-1', groupId: '', memberId: '', role: '', name: 'clan' });
+  assert.equal(created.state, 'confirmed');
+  assert.equal(created.receiptId, 'new-group');
+  await assert.rejects(
+    () => f.tool('group-invite').group({ requestId: 'create-2', groupId: '', memberId: '', role: '', name: 'clan' }),
+    /Invalid group command/,
+  );
 });
 
 test('uncertain external jobs survive restart, restore only to their actor and reconcile without resend', async t => {

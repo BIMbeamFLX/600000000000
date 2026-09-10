@@ -7,8 +7,10 @@ export const workspaceTools = {
   treasury: { slug: 'treasury-view', title: 'Guild treasury', description: 'Read the recorded balances.' },
   cosmetics: { slug: 'collectible-catalog', title: 'Pay to Polish', description: 'Try a finish. Keep the same rights.' },
   fips: { slug: 'network-status', title: 'FIPS status', description: 'Check the host network path.' },
+  'group-create': { slug: 'group-create', title: 'Create a group', description: 'Start a private Marmot group.' },
   'group-invite': { slug: 'group-manager', title: 'Group invitations', description: 'Invite through your Marmot client.' },
   'group-join': { slug: 'group-join', title: 'Join a group', description: 'Accept your Marmot invitation.' },
   'group-remove': { slug: 'group-removal', title: 'Remove group access', description: 'Revoke a client through Marmot.' },
   'group-roles': { slug: 'group-role-manager', title: 'Group roles', description: 'Review Marmot group duties.' },
+  'group-chat': { slug: 'group-chat', title: 'Party chat', description: 'Read and send messages in authorized Marmot groups.' },
 };

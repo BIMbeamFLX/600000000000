@@ -3,7 +3,10 @@ import { inc } from '@napplet/sdk';
 import { el, embedded, frame } from './ui';
 
 export type Row = Record<string, unknown>;
-type GuildService = { read(): Promise<unknown>; command(request: Row): Promise<unknown>; group(request: Row): Promise<unknown>; cancel(request: Row): Promise<unknown> };
+type GuildService = {
+  read(): Promise<unknown>; command(request: Row): Promise<unknown>; group(request: Row): Promise<unknown>;
+  cancel(request: Row): Promise<unknown>; chat?(request: Row): Promise<unknown>;
+};
 /** Shared presentation only. Each bundle has its own entrypoint and host-granted capability. */
 export function tool(title: string, intro: string, slug: string) {
   const app = frame(title, intro);
@@ -12,6 +15,7 @@ export function tool(title: string, intro: string, slug: string) {
   const pendingCommands = new Map<string, Row>();
   const service: GuildService | undefined = host ? {
     read: () => host.read(), group: request => host.group(request), cancel: request => host.cancel(request),
+    chat: request => host.chat ? host.chat(request) : Promise.reject(Error('Marmot client unavailable')),
     command: async request => {
       const key = JSON.stringify([request.action, request.input]);
       const pending = pendingCommands.get(key) ?? request; pendingCommands.set(key, pending);

@@ -47,19 +47,22 @@ test('duties and cosmetic previews are separate, while purchases stay closed', a
 });
 
 test('all four Marmot tools and external status views fail closed without adapters', async ({ page }) => {
-  await page.goto('/?tools=group-invite,group-join,group-remove,group-roles,treasury,fips');
-  for (const mode of ['group-invite', 'group-join', 'group-remove', 'group-roles']) {
+  await page.goto('/?tools=group-create,group-invite,group-join,group-remove,group-roles,group-chat,treasury,fips');
+  for (const mode of ['group-create', 'group-invite', 'group-join', 'group-remove', 'group-roles']) {
     const frame = page.frameLocator(`[data-tool="${mode}"]`);
     await expect(frame.getByRole('status')).toHaveText('Marmot client unavailable.');
     await expect(frame.getByRole('button', { name: /^Request / })).toBeDisabled();
   }
+  const chat = page.frameLocator('[data-tool="group-chat"]');
+  await expect(chat.getByRole('status')).toHaveText('Marmot client unavailable.');
+  await expect(chat.getByRole('button', { name: 'Send message' })).toBeDisabled();
   await expect(page.frameLocator('[data-tool="fips"]').getByRole('status')).toHaveText('fips adapter unavailable');
   await expect(page.frameLocator('[data-tool="treasury"]').getByRole('status')).toHaveText('treasury adapter unavailable');
 });
 
 test('each independent tool fits mobile and has no stand-alone capability', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  for (const mode of ['chapters', 'calendar', 'tasks', 'roles', 'cosmetics', 'treasury', 'fips', 'group-invite', 'group-join', 'group-remove', 'group-roles']) {
+  for (const mode of ['chapters', 'calendar', 'tasks', 'roles', 'cosmetics', 'treasury', 'fips', 'group-create', 'group-invite', 'group-join', 'group-remove', 'group-roles', 'group-chat']) {
     await page.goto(`/?tools=${mode}`);
     const frame = page.frameLocator('iframe');
     await expect(frame.getByRole('heading', { level: 1 })).toBeVisible();
@@ -141,4 +144,41 @@ test('Marmot UI cancels a pending request and allows a new one', async ({ page }
   await expect(frame.getByRole('status')).toContainText('Outcome uncertain');
   expect(calls[0]).toMatchObject({ groupId: 'group-1', memberId: 'demo-member' });
   expect(calls.at(-1)).toMatchObject({ groupId: 'group-1', memberId: 'other-member' });
+});
+
+test('group chat fails closed without adapter and shows a fixture send', async ({ page }) => {
+  await page.goto('/?tools=group-chat');
+  const closed = page.frameLocator('iframe');
+  await expect(closed.getByRole('status')).toHaveText('Marmot client unavailable.');
+  await expect(closed.getByRole('button', { name: 'Send message' })).toBeDisabled();
+  const history: { id: string; groupId: string; pubkey: string; content: string; createdAt: number }[] = [];
+  await page.exposeFunction('fixtureRead', () => ({
+    available: true,
+    groups: [{ groupId: 'group-1', name: 'clan' }],
+    messages: history,
+    pending: [],
+  }));
+  await page.exposeFunction('fixtureChat', (request: Record<string, unknown>) => {
+    history.push({
+      id: String(request.requestId), groupId: String(request.groupId), pubkey: 'aa'.repeat(32),
+      content: String(request.content), createdAt: 1_700_000_000,
+    });
+    return { state: 'sent', receiptId: String(request.requestId) };
+  });
+  await page.exposeFunction('fixtureCancel', () => ({ state: 'cancelled' }));
+  await page.addInitScript(() => {
+    const fixture = window as any;
+    Object.defineProperty(window, 'napplet', { configurable: true, get: () => ({ guild: {
+      read: () => fixture.fixtureRead(), chat: (request: unknown) => fixture.fixtureChat(request),
+      group: () => Promise.reject(Error('No group authority for this tool')),
+      cancel: (request: unknown) => fixture.fixtureCancel(request),
+    } }), set: () => {} });
+  });
+  await page.goto('/?tools=group-chat');
+  const frame = page.frameLocator('iframe');
+  await expect(frame.getByRole('status')).toContainText('Marmot host connected');
+  await frame.getByLabel('Message').fill('hello from fixture');
+  await frame.getByRole('button', { name: 'Send message' }).click();
+  await expect(frame.getByRole('status')).toHaveText('Message sent.');
+  await expect(frame.getByText('hello from fixture')).toBeVisible();
 });

@@ -4,7 +4,7 @@ Current release priority (10 September 2026): real Marmot groups and chat first.
 Meetups and the other guild extras can follow later. See the
 [Grok audit handoff and production acceptance criteria](grok-marmot-audit-handoff.md).
 
-Eleven small tools extend the existing directory, recovery and two Raffle builds.
+Thirteen small tools extend the existing directory, recovery and two Raffle builds.
 Each builds to its own HTML file and manifest. They share presentation helpers;
 they never import another napplet or read a sibling frame's state.
 
@@ -37,12 +37,14 @@ This loopback server has no production login and must not be reverse-proxied.
 | `cosmetics` | `collectible-catalog` | Save one cosmetic preview; purchases unavailable |
 | `treasury` | `treasury-view` | Read a dated, authorized asset balance snapshot |
 | `fips` | `network-status` | Read dated connectivity and peer count |
+| `group-create` | `group-create` | Create a private Marmot group |
 | `group-invite` | `group-manager` | Request a Marmot invitation |
 | `group-join` | `group-join` | Accept a Marmot invitation for the current member |
 | `group-remove` | `group-removal` | Request removal of a Marmot group member |
 | `group-roles` | `group-role-manager` | Request a member/moderator role change |
+| `group-chat` | `group-chat` | Read and send plaintext messages in authorized groups |
 
-All eleven advertise action `open` with convention `napplet:<archetype>/open-v1`.
+All thirteen advertise action `open` with convention `napplet:<archetype>/open-v1`.
 Their exact navigation payload is `{version: 1, guildId: "600b"}`. Opening a tool
 does not mutate state. Manifests are unsigned local build metadata, not evidence
 of installation or full Nappelin conformance. Host services below are a **local
@@ -60,11 +62,17 @@ The host grants a mounted frame a scoped `window.napplet.guild` object:
 ```ts
 read(): Promise<unknown>
 command({requestId, action, input}): Promise<unknown>
-group({requestId, groupId, memberId, role}): Promise<{
+group({requestId, groupId, memberId, role, name?}): Promise<{
   state: 'confirmed' | 'uncertain'; receiptId?: string
+}>
+chat({requestId, groupId, content}): Promise<{
+  state: 'sent' | 'uncertain' | 'failed'; receiptId?: string
 }>
 cancel({requestId}): Promise<{ state: 'cancelled' }>
 ```
+
+`group-chat` `read()` returns `{available, groups:[{groupId,name}], messages}` with plaintext only.
+`group-create` may send an empty `groupId`; Hangar fills it after create.
 
 `guildCapability` fixes the tool and allowed actions on the host. A tasks frame
 cannot turn itself into a role manager by changing its payload. The trusted host
@@ -114,8 +122,24 @@ the chosen client's actual supported authorization semantics or reject them.
 
 The current [Marmot specification](https://github.com/marmot-protocol/marmot)
 separates protocol core, transports and features; its old MIP-era documents are
-deprecated. The inspected Nappelin Hangar has no production Marmot client. There is therefore
-**no live Marmot adapter in this change**. No public-chat fallback is provided.
+deprecated. The demo host imports Hangar's groups module (`createHangarGroups`) as the Marmot
+adapter. HTTP stays on 127.0.0.1; relays are only the Marmot transport.
+
+```sh
+# optional — Hangar checkout used as the Marmot client
+HANGAR_ROOT=G:/Github/nappelin.com
+# comma-separated WebSocket URLs; unset uses Hangar's public default list
+MARMOT_RELAYS=wss://relay.damus.io,wss://nos.lol
+# 32-byte hex throwaway; otherwise written to gitignored .guild-marmot-secret
+MARMOT_SECRET=
+# e2e / fail-closed: MARMOT_RELAYS=off
+```
+
+This is **not production login**. The actor is a throwaway key whose hex pubkey
+is the GuildStore member id so invite/join ids match MLS. MLS state lives in
+`.guild-marmot/<pubkey>/`. Napplet frames never see MLS secrets, key packages or
+Welcome bytes. No public-chat fallback is provided. Set `MARMOT_RELAYS=off` to
+run the loopback host without an adapter.
 
 `ExternalJournal` hashes a canonical encoding of each request so key order cannot
 fork resume. Authorize/validation failures before `execute` propagate and reject
@@ -199,7 +223,7 @@ Named guardians and reviewed keys; authenticated host sessions and consent UI;
 an installed Marmot client and governed group inventory; session-revocation and
 identity-publication adapters; authorized treasury/FIPS sources; operational worker
 startup/retry handling and installed-host conformance tests. Cosmetic checkout,
-membership admission, live chat, identity review and real claims remain separate
+membership admission, identity review and real claims remain separate
 work. No payout or purchase path is enabled by this change.
 
 ## Verification
@@ -217,5 +241,6 @@ The workspace browser suite starts a fictional in-memory host. If running the
 local demo already, set `GUILD_EXTERNAL_HOST=1` to use it instead. Host tests cover
 role revocation, stale sessions, transactional deduplication, restart recovery,
 concurrent external requests, partial recovery and signer changes. The browser
-suite checks persistence, sibling unmount, all eleven mobile layouts, scoped tools
-and unavailable adapters. It does not prove live Marmot conformance.
+suite checks persistence, sibling unmount, mobile layouts, scoped tools
+and unavailable adapters. Hangar memory-network tests cover create/invite/join/chat
+without sockets. It does not prove production Marmot or White Noise interop.

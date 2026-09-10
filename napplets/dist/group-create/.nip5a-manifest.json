@@ -1,0 +1,27 @@
+{
+  "kind": 35129,
+  "created_at": 1789041317,
+  "tags": [
+    [
+      "d",
+      "600b-group-create"
+    ],
+    [
+      "path",
+      "/index.html",
+      "17d1cfac98408facfdad8975c693ac777ccc51b9f347c5e3f64d6d3314744459"
+    ],
+    [
+      "x",
+      "b49301e9e7794a90705ce6fd158648d1527facac7bfd0b3e1831feb6d483b6be",
+      "aggregate"
+    ],
+    [
+      "archetype",
+      "group-create",
+      "napplet:group-create/open-v1"
+    ]
+  ],
+  "content": "",
+  "aggregateHash": "b49301e9e7794a90705ce6fd158648d1527facac7bfd0b3e1831feb6d483b6be"
+}

@@ -1,0 +1,27 @@
+{
+  "kind": 35129,
+  "created_at": 1789041317,
+  "tags": [
+    [
+      "d",
+      "600b-group-chat"
+    ],
+    [
+      "path",
+      "/index.html",
+      "2c7e7e6eeaf6f5fda53d73050500c513c45447e90fdcd1629ca5bf8403145412"
+    ],
+    [
+      "x",
+      "927efae5dbaafae89002fee21cd73e71ea74d2a352ec9c2c0c2857bb2465ca19",
+      "aggregate"
+    ],
+    [
+      "archetype",
+      "group-chat",
+      "napplet:group-chat/open-v1"
+    ]
+  ],
+  "content": "",
+  "aggregateHash": "927efae5dbaafae89002fee21cd73e71ea74d2a352ec9c2c0c2857bb2465ca19"
+}

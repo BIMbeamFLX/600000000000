@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "state": "design_catalog_with_fifteen_builds",
-  "note": "19 function boundaries; 15 independent builds. The local workspace uses fictional members. Avatar recovery is not offered in this release. Production Marmot, treasury and FIPS require authorized host adapters.",
+  "state": "design_catalog_with_seventeen_builds",
+  "note": "20 function boundaries; 17 independent builds. The local workspace uses a throwaway Marmot identity when Hangar is configured. Avatar recovery is not offered in this release. Production login, treasury and FIPS remain unconnected.",
   "napplets": [
     {
       "id": "guild-roster",
@@ -295,8 +295,7 @@
           "payload": {
             "version": 1,
             "required": [
-              "guildId",
-              "groupRef"
+              "guildId"
             ],
             "optional": [],
             "additional_fields": false,
@@ -305,7 +304,58 @@
           }
         }
       ],
-      "dispatches": []
+      "dispatches": [],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/group-chat/index.html",
+        "manifest": "napplets/dist/group-chat/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:group-chat/open-v1"
+        ],
+        "host_validation": "local_scoped_workspace",
+        "scope": "Guild-only navigation. Group selection happens inside the tool. Operations require the scoped host guild capability. No production authentication."
+      }
+    },
+    {
+      "id": "guild-group-create",
+      "name": "Create a group",
+      "purpose": "Create a private Marmot group from the workspace",
+      "host_services": [
+        "identity",
+        "marmot_membership"
+      ],
+      "archetype": {
+        "slug": "group-create",
+        "status": "local_proposal"
+      },
+      "accepts": [
+        {
+          "action": "open",
+          "convention": "napplet:group-create/open-v1",
+          "status": "local_payload_proposal",
+          "payload": {
+            "version": 1,
+            "required": [
+              "guildId"
+            ],
+            "optional": [],
+            "additional_fields": false,
+            "id_format": "opaque_nonempty_string_max_128",
+            "max_bytes": 2048
+          }
+        }
+      ],
+      "dispatches": [],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/group-create/index.html",
+        "manifest": "napplets/dist/group-create/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:group-create/open-v1"
+        ],
+        "host_validation": "local_scoped_workspace",
+        "scope": "Guild-only navigation. Operations require the scoped host guild capability. No production authentication."
+      }
     },
     {
       "id": "guild-group-admin",

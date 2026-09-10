@@ -8,10 +8,10 @@ wird ein eigenes **Napplet**: ein kleines Werkzeug, das einzeln funktioniert und
 sich mit anderen kombinieren lässt. Der Nutzer stellt seine Oberfläche zusammen.
 
 Heute gibt es eine bedienbare Community-Vorschau, einen separaten Elders-Desk und
-zwei Raffle-Werkzeuge und einen lokalen Gilden-Workspace mit elf weiteren Napplets.
+zwei Raffle-Werkzeuge und einen lokalen Gilden-Workspace mit dreizehn weiteren Napplets.
 Ortsgruppen, Termine, Aufgaben, Dienste und kosmetische Auswahl werden in SQLite
-gespeichert. Marmot, Kasse und FIPS benötigen ihre Host-Anbindung. Echte Auszahlungen
-sind geschlossen.
+gespeichert. Die lokale Marmot-Demo hängt an Hangar; Kasse und FIPS bleiben
+unverbunden. Echte Auszahlungen sind geschlossen.
 
 ![Rock Garden: Nostr-Welcome und sichtbar geschlossener Faucet](docs/images/welcome-desktop.png)
 
@@ -30,8 +30,8 @@ sind geschlossen.
 | Raffle-Planer | Preisstufen, Presets, Ticketanzahl, Sats-Budget und Export eines Vorschau-Plans |
 | Ticket-Printer | Eigenständiges Werkzeug; Plan importieren, Loslayout ansehen, Vorschau-PDF herunterladen |
 | Supply-Modell | Reproduzierbare 21-Jahres-Rechnung mit ganzen atomaren Einheiten und Tests |
-| Gilden-Komposition | 19 Werkzeuggrenzen, 15 Builds; lokaler SQLite-Workspace und getrennte Marmot-Aktionen |
-| Marmot / FIPS / Liquid-Ausgabe | Architektur festgelegt; operative Dienste noch nicht angeschlossen |
+| Gilden-Komposition | 20 Werkzeuggrenzen, 17 Builds; lokaler SQLite-Workspace, Hangar-Marmot-Demo |
+| Marmot / FIPS / Liquid-Ausgabe | Marmot-Demo über Hangar und Relays; FIPS und Auszahlung unverbunden |
 
 Ein angezeigter Nostr-Schlüssel ist noch keine authentifizierte Mitgliedschaft.
 Die aktuellen Seiten veröffentlichen keine Mitgliedschaft und zahlen keine Tokens aus.
@@ -43,9 +43,11 @@ node scripts/guild-workspace.mjs
 ```
 
 Mit Node.js 24 unter **http://127.0.0.1:4175** öffnen. Der lokale Workspace nutzt
-fiktive Mitglieder und speichert Änderungen auf diesem Rechner. Ortsgruppen,
-Termine und Aufgaben laufen nebeneinander; jedes weitere Werkzeug lässt sich
-einzeln öffnen. [Bedienung und technische Host-Verträge](docs/guild-workspace.md).
+eine Wegwerf-Marmot-Identität (kein Produktions-Login) und speichert Änderungen
+auf diesem Rechner. `HANGAR_ROOT`, `MARMOT_RELAYS` und `MARMOT_SECRET` stehen in
+[docs/guild-workspace.md](docs/guild-workspace.md). HTTP bleibt Loopback; Relays
+sind nur der Marmot-Transport. Ortsgruppen, Termine und Aufgaben laufen
+nebeneinander; jedes weitere Werkzeug lässt sich einzeln öffnen.
 
 ![Drei eigenständige Gilden-Napplets im lokalen Workspace](docs/images/guild-workspace-desktop.png)
 

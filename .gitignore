@@ -5,6 +5,8 @@
 *.db-wal
 *.db-shm
 .env
+.guild-marmot-secret
+.guild-marmot/
 __pycache__/
 .ruff_cache/
 node_modules/

@@ -23,7 +23,8 @@ fallback behavior, source evidence, and SDK compatibility gap.
 | Local chapters | Discover chapters | Public filters or opt-in location | Selected chapter ID |
 | Calendar | Arrange meetups | Guild/chapter and event | Event or attendance status |
 | Operations | Coordinate activities | Guild and operation | Operation status |
-| Party chat | Use Marmot messaging | Host-authorized group reference | Message delivery status |
+| Party chat | Use Marmot messaging | Guild; group selected inside the tool | Message delivery status |
+| Group create | Create a private Marmot group | Guild | Confirmed group receipt |
 | Group invitations | Invite group clients | Authorized group and member | Confirmed invitation receipt |
 | Group join | Accept an invitation | Own member and authorized group | Confirmed join receipt |
 | Group removal | Remove group clients | Authorized group and member | Confirmed removal receipt |

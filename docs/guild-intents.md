@@ -1,7 +1,7 @@
 # Guild intents and archetypes
 
 Contract design, 9 September 2026. Catalog: `data/guild-napplets.json`.
-Fifteen independent builds have local manifest metadata. Eleven workspace tools
+Seventeen independent builds have local manifest metadata. Thirteen workspace tools
 accept only the guild base context and use a separately granted host capability.
 These builds are not installed on a production host. See [workspace contracts](guild-workspace.md).
 Every new role/convention below is
@@ -14,8 +14,9 @@ NAP-INTENT supplies host-mediated discovery and dispatch. Reuse an upstream role
 only when its boundary fits; application IDs do not determine role identity.
 The [upstream registry](https://github.com/napplet/naps/blob/master/ARCHETYPES.md)
 lists `dm` as a draft for one-to-one or small-group conversation. Guild party chat
-does **not** use that role: it is a local `group-chat` proposal and remains
-unimplemented. Large community broadcasts are outside this napplet's role.
+does **not** use that role: it is a local `group-chat` proposal. The group is
+selected inside the tool from host-authorized Marmot groups. Large community
+broadcasts are outside this napplet's role.
 
 Other guild roles below are unregistered proposals. Before shipping, recheck the
 registry for a compatible role and seek upstream review where needed. Do not
@@ -57,7 +58,8 @@ opening a review or claim tool must not perform its privileged operation.
 | Local chapters | `chapter-directory` | — | — |
 | Calendar | `calendar` | — | — |
 | Operations | `operation-board` | — | — |
-| Party chat | `group-chat` | `groupRef` | — |
+| Party chat | `group-chat` | — | — |
+| Group create | `group-create` | — | — |
 | Group invitations | `group-manager` | — | — |
 | Group join | `group-join` | — | — |
 | Group removal | `group-removal` | — | — |
@@ -151,7 +153,7 @@ Proposed composition examples:
 
 - Roster → Identity review → Key recovery, only when a case is available.
 - Admissions → Group invitations and Welcome claim, with server-verified context.
-- Local chapters → Calendar → Operations. Party chat is an unimplemented `group-chat` role, not a `dm` handoff.
+- Local chapters → Calendar → Operations. Party chat is a local `group-chat` role, not a `dm` handoff.
 - Guild bank → Welcome claim for the current user's eligible entitlement.
 - Raffle organizer → Ticket printer with a host-authorized raffle ID, never bearer secrets.
 

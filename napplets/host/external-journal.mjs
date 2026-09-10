@@ -35,7 +35,12 @@ export class ExternalJournal {
     return this.#db.prepare(`SELECT request FROM external_jobs WHERE ${OPEN}`).all()
       .map(row => JSON.parse(row.request)).filter(request => request?.actorId === actor.memberId
         && request.identityVersion === actor.version && request.action === action)
-      .map(({ requestId, groupId, memberId, role }) => ({ requestId, groupId, memberId, role }));
+      .map(({ requestId, groupId, memberId, role, name, content }) => {
+        const row = { requestId, groupId, memberId, role };
+        if (typeof name === 'string') row.name = name;
+        if (typeof content === 'string') row.content = content;
+        return row;
+      });
   }
   #load(id) { return this.#db.prepare('SELECT * FROM external_jobs WHERE id=?').get(id); }
   #record(id, state, result = null) {
