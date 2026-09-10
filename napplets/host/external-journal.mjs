@@ -143,7 +143,7 @@ export class ExternalJournal {
       this.#record(request.requestId, 'confirmed', { receiptId: result.receiptId });
       return this.#outcome(request.requestId, { state: 'confirmed', receiptId: result.receiptId });
     } finally {
-      this.#inflight.delete(request.requestId);
+      if (execute) this.#inflight.delete(request.requestId);
     }
   }
   async run(request, adapter, authorize) {
