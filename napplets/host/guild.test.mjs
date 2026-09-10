@@ -231,10 +231,11 @@ test('cancel during execute does not report confirmed', async t => {
   const running = journal.run(request, adapter, async () => {});
   await started;
   assert.deepEqual(journal.cancel(request.requestId, officer), { state: 'cancelled' });
+  const next = { ...request, requestId: 'invite-after-cancel-race' };
+  await assert.rejects(() => journal.run(next, adapter, async () => {}), /in flight/);
   release();
   await assert.rejects(() => running, /cancelled/);
   assert.deepEqual(journal.pending(officer, 'invite'), []);
-  const next = { ...request, requestId: 'invite-after-cancel-race' };
   assert.equal((await journal.run(next, { execute: async () => ({ confirmed: true, receiptId: 'fresh' }), status: async () => ({}) }, async () => {})).state, 'confirmed');
 });
 

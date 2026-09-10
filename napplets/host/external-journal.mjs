@@ -22,6 +22,7 @@ export function canonicalDigest(request) {
 /** Durable execution boundary. Unknown network outcomes are queried, never blindly repeated. */
 export class ExternalJournal {
   #db;
+  #inflight = new Map();
   constructor(path) {
     this.#db = new DatabaseSync(path);
     this.#db.exec(`PRAGMA busy_timeout=5000;
@@ -75,15 +76,20 @@ export class ExternalJournal {
       return job.state;
     } catch (error) { this.#db.exec('ROLLBACK'); throw error; }
   }
+  #blocksGroup(request, otherId, other) {
+    if (otherId === request.requestId) return false;
+    if (other?.groupId !== request.groupId) return false;
+    if (Number.isSafeInteger(other.identityVersion) && Number.isSafeInteger(request.identityVersion)
+      && other.identityVersion !== request.identityVersion) return false;
+    return true;
+  }
   #assertGroupIdle(request, requestId) {
     if (typeof request.groupId !== 'string' || !request.groupId) return;
     for (const row of this.#db.prepare(`SELECT id,request FROM external_jobs WHERE ${OPEN}`).all()) {
-      if (row.id === requestId) continue;
-      const other = JSON.parse(row.request);
-      if (other?.groupId !== request.groupId) continue;
-      if (Number.isSafeInteger(other.identityVersion) && Number.isSafeInteger(request.identityVersion)
-        && other.identityVersion !== request.identityVersion) continue;
-      throw Error('Group operation already in flight');
+      if (this.#blocksGroup(request, row.id, JSON.parse(row.request))) throw Error('Group operation already in flight');
+    }
+    for (const [id, other] of this.#inflight) {
+      if (this.#blocksGroup(request, id, other)) throw Error('Group operation already in flight');
     }
   }
   #outcome(id, fallback) {
@@ -115,25 +121,30 @@ export class ExternalJournal {
     } catch (error) { this.#db.exec('ROLLBACK'); throw error; }
   }
   async #settle(request, adapter, authorize, execute) {
-    let result;
+    if (execute && request.groupId) this.#inflight.set(request.requestId, request);
     try {
-      result = execute ? await adapter.execute(request) : await adapter.status(request);
-    } catch {
-      this.#record(request.requestId, 'uncertain');
-      return this.#outcome(request.requestId, { state: 'uncertain' });
-    }
-    try {
-      await authorize();
-      requireValue(receipt(result), 'External confirmation pending');
-    } catch (error) {
-      if (error?.message === 'External confirmation pending') {
+      let result;
+      try {
+        result = execute ? await adapter.execute(request) : await adapter.status(request);
+      } catch {
         this.#record(request.requestId, 'uncertain');
         return this.#outcome(request.requestId, { state: 'uncertain' });
       }
-      throw error;
+      try {
+        await authorize();
+        requireValue(receipt(result), 'External confirmation pending');
+      } catch (error) {
+        if (error?.message === 'External confirmation pending') {
+          this.#record(request.requestId, 'uncertain');
+          return this.#outcome(request.requestId, { state: 'uncertain' });
+        }
+        throw error;
+      }
+      this.#record(request.requestId, 'confirmed', { receiptId: result.receiptId });
+      return this.#outcome(request.requestId, { state: 'confirmed', receiptId: result.receiptId });
+    } finally {
+      this.#inflight.delete(request.requestId);
     }
-    this.#record(request.requestId, 'confirmed', { receiptId: result.receiptId });
-    return this.#outcome(request.requestId, { state: 'confirmed', receiptId: result.receiptId });
   }
   async run(request, adapter, authorize) {
     boundedId(request.requestId);

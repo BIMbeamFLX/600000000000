@@ -7,6 +7,7 @@ export function groupTool(action: 'invite' | 'join' | 'remove' | 'role', slug: s
   const groupId = field(panel, 'Host group reference'); const memberId = field(panel, action === 'join' ? 'Your member ID' : 'Member ID');
   const role = action === 'role' ? field(panel, 'Group role: member or moderator') : null;
   let pending: Record<string, unknown> | null = null;
+  let inFlight: Promise<unknown> | null = null;
   const fields = () => [groupId, memberId, role];
   const lock = (locked: boolean) => { for (const field of fields()) if (field) field.disabled = locked; };
   const perform = async () => {
@@ -14,15 +15,21 @@ export function groupTool(action: 'invite' | 'join' | 'remove' | 'role', slug: s
     pending ??= { requestId: crypto.randomUUID(), groupId: groupId.value, memberId: memberId.value, role: role?.value ?? '' };
     const submitted = pending;
     lock(true); submit.disabled = true; cancelBtn.disabled = !service;
-    const result = await service!.group(submitted) as { state: string };
-    if (pending !== submitted) return;
-    if (result.state === 'confirmed') {
-      pending = null; lock(false); cancelBtn.disabled = true;
-      await restore();
-      return 'Confirmed by the Marmot client.';
+    const work = service!.group(submitted) as Promise<{ state: string }>;
+    inFlight = work;
+    try {
+      const result = await work;
+      if (pending !== submitted) return 'Pending request cancelled.';
+      if (result.state === 'confirmed') {
+        pending = null; lock(false); cancelBtn.disabled = true;
+        await restore();
+        return 'Confirmed by the Marmot client.';
+      }
+      cancelBtn.disabled = !service;
+      return 'Outcome uncertain. Check this same request; it will not be sent again automatically.';
+    } finally {
+      if (inFlight === work) inFlight = null;
     }
-    cancelBtn.disabled = !service;
-    return 'Outcome uncertain. Check this same request; it will not be sent again automatically.';
   };
   const submit = button(panel, `Request ${action}`, false, () => void run(perform));
   button(panel, 'Check pending request', !!service, () => {
@@ -32,11 +39,15 @@ export function groupTool(action: 'invite' | 'join' | 'remove' | 'role', slug: s
   const cancelBtn = button(panel, 'Cancel pending request', false, () => {
     if (!pending || !service) { status.textContent = 'No pending request.'; return; }
     const requestId = String(pending.requestId);
+    const waiting = inFlight;
+    cancelBtn.disabled = true; submit.disabled = true; lock(true);
     void service.cancel({ requestId }).then(async () => {
-      pending = null; lock(false); cancelBtn.disabled = true;
+      pending = null;
+      if (waiting) await waiting.then(() => undefined, () => undefined);
+      lock(false);
       await restore();
       status.textContent = 'Pending request cancelled. You can start a new action.';
-    }).catch((error: Error) => { status.textContent = error.message; });
+    }).catch((error: Error) => { status.textContent = error.message; cancelBtn.disabled = !pending || !service; });
   });
   panel.append(el('p', 'Group membership and encrypted MLS state remain in the Marmot client. No public-chat fallback.', 'muted'));
   const restore = async () => {
