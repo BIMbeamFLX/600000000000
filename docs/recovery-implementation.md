@@ -83,6 +83,11 @@ Delivery success only means the request was delivered.
 
 The outbox records pending identity publication, old-session cleanup and Marmot
 access renewal. These adapters are not connected and their work is not marked done.
+The [workspace implementation](guild-workspace.md#recovery-wiring) now supplies
+the NIP-07 signer wrapper and durable follow-up worker. It records confirmed
+receipts in revocation-first order, reconciles uncertain operations, and gates
+normal guild sessions until the current rotation is synchronized. Actual clients,
+consent UI, session service and publication endpoints still need deployment.
 Host authorization must check the current identity version on every protected action
 immediately; merely clearing a browser session later is insufficient. Old Nostr keys
 still work on unrelated services. Marmot needs explicit client removal/admission;

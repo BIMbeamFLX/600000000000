@@ -1,0 +1,27 @@
+{
+  "kind": 35129,
+  "created_at": 1789029166,
+  "tags": [
+    [
+      "d",
+      "600b-calendar"
+    ],
+    [
+      "path",
+      "/index.html",
+      "a345c771d5b53d461f0f3ce8b745adc0dcc1566c94ce031203f882fc270bc687"
+    ],
+    [
+      "x",
+      "70e5a8e2a3318b5ab2a65e0f44b2a279c113c96802636c14be6283a1e3ad6979",
+      "aggregate"
+    ],
+    [
+      "archetype",
+      "calendar",
+      "napplet:calendar/open-v1"
+    ]
+  ],
+  "content": "",
+  "aggregateHash": "70e5a8e2a3318b5ab2a65e0f44b2a279c113c96802636c14be6283a1e3ad6979"
+}

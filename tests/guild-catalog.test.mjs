@@ -43,10 +43,11 @@ test('outgoing intents resolve by role to an explicitly accepted convention', ()
 
 test('built previews match their advertised manifest contracts and content hashes', () => {
   const built = catalog.napplets.filter(tool => tool.implementation?.state === 'preview_built');
-  assert.equal(built.length, 4);
+  assert.equal(built.length, 15);
   for (const tool of built) {
     const manifest = readJson(`../${tool.implementation.manifest}`);
     const bytes = readFileSync(new URL(`../${tool.implementation.entrypoint}`, import.meta.url));
+    assert.equal(bytes.includes(Buffer.from('\r\n')), false, 'Build bytes must survive Git LF normalization');
     assert.equal(manifest.tags.find(tag => tag[0] === 'path')[2], createHash('sha256').update(bytes).digest('hex'));
     assert.deepEqual(manifest.tags.filter(tag => tag[0] === 'archetype').map(tag => tag[2]),
       tool.implementation.accepted_conventions);

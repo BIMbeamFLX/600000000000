@@ -1,0 +1,27 @@
+{
+  "kind": 35129,
+  "created_at": 1789029167,
+  "tags": [
+    [
+      "d",
+      "600b-fips"
+    ],
+    [
+      "path",
+      "/index.html",
+      "840192c161ee79574acae514ebe1eddad6cf1dd5506fd19ec1ce3fb87f701181"
+    ],
+    [
+      "x",
+      "c5e9bd87b5228ebf9d469cfc27cc1b489338c79e774e872835a6ce716abfd8d8",
+      "aggregate"
+    ],
+    [
+      "archetype",
+      "network-status",
+      "napplet:network-status/open-v1"
+    ]
+  ],
+  "content": "",
+  "aggregateHash": "c5e9bd87b5228ebf9d469cfc27cc1b489338c79e774e872835a6ce716abfd8d8"
+}

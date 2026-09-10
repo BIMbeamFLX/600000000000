@@ -24,7 +24,10 @@ fallback behavior, source evidence, and SDK compatibility gap.
 | Calendar | Arrange meetups | Guild/chapter and event | Event or attendance status |
 | Operations | Coordinate activities | Guild and operation | Operation status |
 | Party chat | Use Marmot messaging | Host-authorized group reference | Message delivery status |
-| Group invitations | Admit/remove group clients | Group and membership case | Group membership status |
+| Group invitations | Invite group clients | Authorized group and member | Confirmed invitation receipt |
+| Group join | Accept an invitation | Own member and authorized group | Confirmed join receipt |
+| Group removal | Remove group clients | Authorized group and member | Confirmed removal receipt |
+| Group roles | Assign group duties | Authorized group, member and role | Confirmed role receipt |
 | Guild bank | Inspect treasury | Permitted ledger scope | Read-only ledger projection |
 | Welcome claim | Claim once | Stable member and entitlement | Pending/settled claim status |
 | Identity review | Check key/NIP-05 evidence | Member and review case | Reviewed identity status |
@@ -40,7 +43,7 @@ Elder restrictions cannot be supplied as trusted props from another napplet.
 
 Raffle management and ticket printing reuse the design of
 [dni's LNURLcash raffle](raffle-integration.md). Their sat funding is separate
-from the Liquid welcome. The catalog now describes 16 independent tools.
+from the Liquid welcome. The catalog now describes 19 independent tools.
 
 ## Composition contract
 
@@ -93,6 +96,8 @@ one tool while keeping the rest of the portal unchanged.
 
 The public member directory now has its own snapshot build (see [contract](member-directory.md)).
 Key recovery also has a host-backed build and a local SQLite service; see [Recovery implementation](recovery-implementation.md).
-The other 12 tools remain designs. The two Raffle bundles use the pinned SDK and
+Eleven further tools now have independent builds and a local SQLite workspace;
+see [workspace guide and host contracts](guild-workspace.md). Admissions, live chat,
+welcome claims and identity review remain designs. The two Raffle bundles use the pinned SDK and
 are tested with host-domain fixtures; full installed-host conformance and operational
 backend endpoints are not yet provided. See [Raffle integration](raffle-integration.md).

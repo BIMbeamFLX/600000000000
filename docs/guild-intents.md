@@ -1,8 +1,9 @@
 # Guild intents and archetypes
 
 Contract design, 9 September 2026. Catalog: `data/guild-napplets.json`.
-Most contracts are designs. The directory and two Raffle builds have local manifest metadata
-and fixture-tested intent handling, but are not installed on a production host.
+Fifteen independent builds have local manifest metadata. Eleven workspace tools
+accept only the guild base context and use a separately granted host capability.
+These builds are not installed on a production host. See [workspace contracts](guild-workspace.md).
 Every new role/convention below is
 a local proposal unless explicitly marked as an upstream draft.
 
@@ -53,17 +54,20 @@ opening a review or claim tool must not perform its privileged operation.
 |---|---|---|---|
 | Roster | `member-directory` | — | `memberId` |
 | Admissions | `membership-review` | — | `caseId`, `memberId` |
-| Duties | `role-manager` | `memberId` | — |
-| Local chapters | `chapter-directory` | — | `chapterId` |
-| Calendar | `calendar` | — | `chapterId`, `eventId` |
-| Operations | `operation-board` | — | `operationId`, `eventId` |
+| Duties | `role-manager` | — | — |
+| Local chapters | `chapter-directory` | — | — |
+| Calendar | `calendar` | — | — |
+| Operations | `operation-board` | — | — |
 | Party chat | `dm` (upstream draft) | `groupRef` | — |
-| Group invitations | `group-manager` | `groupRef` | `memberId`, `caseId` |
+| Group invitations | `group-manager` | — | — |
+| Group join | `group-join` | — | — |
+| Group removal | `group-removal` | — | — |
+| Group roles | `group-role-manager` | — | — |
 | Guild bank | `treasury-view` | — | — |
 | Welcome claim | `entitlement-claim` | `memberId`, `entitlementId` | — |
 | Identity review | `identity-review` | `memberId` | `caseId` |
 | Key recovery | `key-recovery` | `caseId` | — |
-| Pay to Polish | `collectible-catalog` | — | `itemId` |
+| Pay to Polish | `collectible-catalog` | — | — |
 | Mesh status | `network-status` | — | — |
 | Raffle organizer | `raffle-manager` | — | `raffleId` |
 | Ticket printer | `ticket-printer` | `raffleId` | — |
@@ -81,6 +85,12 @@ Embedded napplets use NAP-INTENT and subscribe to the matching INC delivery topi
 
 The catalog is the machine-readable definition of this table and each tool's
 outbound intents. A future change updates both in one review.
+
+The eleven workspace builds deliberately use only `{version: 1, guildId: "600b"}`.
+Select a member, group or task inside its own tool; these references are submitted
+to the scoped host service after explicit interaction. They are not accepted as
+extra navigation fields. The catalog's general outbound intent graph remains a
+design unless `implementation.dispatches` explicitly lists a built handoff.
 
 ## Payload v1
 

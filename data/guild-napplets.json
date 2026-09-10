@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "state": "design_catalog_with_four_builds",
-  "note": "16 function boundaries; directory, raffle, printer and recovery builds. Recovery requires an explicitly configured host and policy.",
+  "state": "design_catalog_with_fifteen_builds",
+  "note": "19 function boundaries; 15 independent builds. The local workspace uses fictional members. Production recovery, Marmot, treasury and FIPS require authorized host adapters.",
   "napplets": [
     {
       "id": "guild-roster",
@@ -123,8 +123,7 @@
           "payload": {
             "version": 1,
             "required": [
-              "guildId",
-              "memberId"
+              "guildId"
             ],
             "optional": [],
             "additional_fields": false,
@@ -133,7 +132,17 @@
           }
         }
       ],
-      "dispatches": []
+      "dispatches": [],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/roles/index.html",
+        "manifest": "napplets/dist/roles/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:role-manager/open-v1"
+        ],
+        "host_validation": "local_scoped_workspace",
+        "scope": "Guild-only navigation. Operations require the scoped host guild capability. No production authentication or live external adapters in the demo."
+      }
     },
     {
       "id": "guild-chapters",
@@ -156,9 +165,7 @@
             "required": [
               "guildId"
             ],
-            "optional": [
-              "chapterId"
-            ],
+            "optional": [],
             "additional_fields": false,
             "id_format": "opaque_nonempty_string_max_128",
             "max_bytes": 2048
@@ -170,7 +177,17 @@
           "archetype": "calendar",
           "convention": "napplet:calendar/open-v1"
         }
-      ]
+      ],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/chapters/index.html",
+        "manifest": "napplets/dist/chapters/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:chapter-directory/open-v1"
+        ],
+        "host_validation": "local_scoped_workspace",
+        "scope": "Guild-only navigation. Operations require the scoped host guild capability. No production authentication or live external adapters in the demo."
+      }
     },
     {
       "id": "guild-calendar",
@@ -194,10 +211,7 @@
             "required": [
               "guildId"
             ],
-            "optional": [
-              "chapterId",
-              "eventId"
-            ],
+            "optional": [],
             "additional_fields": false,
             "id_format": "opaque_nonempty_string_max_128",
             "max_bytes": 2048
@@ -209,7 +223,17 @@
           "archetype": "operation-board",
           "convention": "napplet:operation-board/open-v1"
         }
-      ]
+      ],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/calendar/index.html",
+        "manifest": "napplets/dist/calendar/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:calendar/open-v1"
+        ],
+        "host_validation": "local_scoped_workspace",
+        "scope": "Guild-only navigation. Operations require the scoped host guild capability. No production authentication or live external adapters in the demo."
+      }
     },
     {
       "id": "guild-operations",
@@ -233,10 +257,7 @@
             "required": [
               "guildId"
             ],
-            "optional": [
-              "operationId",
-              "eventId"
-            ],
+            "optional": [],
             "additional_fields": false,
             "id_format": "opaque_nonempty_string_max_128",
             "max_bytes": 2048
@@ -248,7 +269,17 @@
           "archetype": "dm",
           "convention": "napplet:dm/open-600b-v1"
         }
-      ]
+      ],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/tasks/index.html",
+        "manifest": "napplets/dist/tasks/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:operation-board/open-v1"
+        ],
+        "host_validation": "local_scoped_workspace",
+        "scope": "Guild-only navigation. Operations require the scoped host guild capability. No production authentication or live external adapters in the demo."
+      }
     },
     {
       "id": "guild-chat",
@@ -284,7 +315,7 @@
     {
       "id": "guild-group-admin",
       "name": "Group invitations",
-      "purpose": "Manage authorized Marmot group admission and removal",
+      "purpose": "Request an authorized Marmot invitation; join, removal and group roles have separate napplets",
       "host_services": [
         "identity",
         "marmot_membership"
@@ -301,13 +332,9 @@
           "payload": {
             "version": 1,
             "required": [
-              "guildId",
-              "groupRef"
+              "guildId"
             ],
-            "optional": [
-              "memberId",
-              "caseId"
-            ],
+            "optional": [],
             "additional_fields": false,
             "id_format": "opaque_nonempty_string_max_128",
             "max_bytes": 2048
@@ -319,7 +346,17 @@
           "archetype": "dm",
           "convention": "napplet:dm/open-600b-v1"
         }
-      ]
+      ],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/group-invite/index.html",
+        "manifest": "napplets/dist/group-invite/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:group-manager/open-v1"
+        ],
+        "host_validation": "local_scoped_workspace",
+        "scope": "Guild-only navigation. Operations require the scoped host guild capability. No production authentication or live external adapters in the demo."
+      }
     },
     {
       "id": "guild-treasury",
@@ -354,7 +391,17 @@
           "archetype": "entitlement-claim",
           "convention": "napplet:entitlement-claim/open-v1"
         }
-      ]
+      ],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/treasury/index.html",
+        "manifest": "napplets/dist/treasury/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:treasury-view/open-v1"
+        ],
+        "host_validation": "local_scoped_workspace",
+        "scope": "Guild-only navigation. Operations require the scoped host guild capability. No production authentication or live external adapters in the demo."
+      }
     },
     {
       "id": "guild-faucet",
@@ -498,16 +545,24 @@
             "required": [
               "guildId"
             ],
-            "optional": [
-              "itemId"
-            ],
+            "optional": [],
             "additional_fields": false,
             "id_format": "opaque_nonempty_string_max_128",
             "max_bytes": 2048
           }
         }
       ],
-      "dispatches": []
+      "dispatches": [],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/cosmetics/index.html",
+        "manifest": "napplets/dist/cosmetics/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:collectible-catalog/open-v1"
+        ],
+        "host_validation": "local_scoped_workspace",
+        "scope": "Guild-only navigation. Operations require the scoped host guild capability. No production authentication or live external adapters in the demo."
+      }
     },
     {
       "id": "guild-network",
@@ -537,7 +592,17 @@
           }
         }
       ],
-      "dispatches": []
+      "dispatches": [],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/fips/index.html",
+        "manifest": "napplets/dist/fips/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:network-status/open-v1"
+        ],
+        "host_validation": "local_scoped_workspace",
+        "scope": "Guild-only navigation. Operations require the scoped host guild capability. No production authentication or live external adapters in the demo."
+      }
     },
     {
       "id": "guild-raffle",
@@ -647,6 +712,129 @@
         "host_validation": "domain_fixtures_only",
         "funding": "not_connected",
         "export": "standalone_preview_only"
+      }
+    },
+    {
+      "id": "guild-group-join",
+      "name": "Join a group",
+      "purpose": "Accept your Marmot invitation.",
+      "host_services": [
+        "identity",
+        "marmot_membership"
+      ],
+      "archetype": {
+        "slug": "group-join",
+        "status": "local_proposal"
+      },
+      "accepts": [
+        {
+          "action": "open",
+          "convention": "napplet:group-join/open-v1",
+          "status": "local_payload_proposal",
+          "payload": {
+            "version": 1,
+            "required": [
+              "guildId"
+            ],
+            "optional": [],
+            "additional_fields": false,
+            "id_format": "opaque_nonempty_string_max_128",
+            "max_bytes": 2048
+          }
+        }
+      ],
+      "dispatches": [],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/group-join/index.html",
+        "manifest": "napplets/dist/group-join/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:group-join/open-v1"
+        ],
+        "host_validation": "local_scoped_workspace",
+        "scope": "Guild-only navigation. Operations require the scoped host guild capability. No production authentication or live external adapters in the demo."
+      }
+    },
+    {
+      "id": "guild-group-remove",
+      "name": "Remove group access",
+      "purpose": "Revoke a client through Marmot.",
+      "host_services": [
+        "identity",
+        "marmot_membership"
+      ],
+      "archetype": {
+        "slug": "group-removal",
+        "status": "local_proposal"
+      },
+      "accepts": [
+        {
+          "action": "open",
+          "convention": "napplet:group-removal/open-v1",
+          "status": "local_payload_proposal",
+          "payload": {
+            "version": 1,
+            "required": [
+              "guildId"
+            ],
+            "optional": [],
+            "additional_fields": false,
+            "id_format": "opaque_nonempty_string_max_128",
+            "max_bytes": 2048
+          }
+        }
+      ],
+      "dispatches": [],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/group-remove/index.html",
+        "manifest": "napplets/dist/group-remove/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:group-removal/open-v1"
+        ],
+        "host_validation": "local_scoped_workspace",
+        "scope": "Guild-only navigation. Operations require the scoped host guild capability. No production authentication or live external adapters in the demo."
+      }
+    },
+    {
+      "id": "guild-group-roles",
+      "name": "Group roles",
+      "purpose": "Review Marmot group duties.",
+      "host_services": [
+        "identity",
+        "marmot_membership"
+      ],
+      "archetype": {
+        "slug": "group-role-manager",
+        "status": "local_proposal"
+      },
+      "accepts": [
+        {
+          "action": "open",
+          "convention": "napplet:group-role-manager/open-v1",
+          "status": "local_payload_proposal",
+          "payload": {
+            "version": 1,
+            "required": [
+              "guildId"
+            ],
+            "optional": [],
+            "additional_fields": false,
+            "id_format": "opaque_nonempty_string_max_128",
+            "max_bytes": 2048
+          }
+        }
+      ],
+      "dispatches": [],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/group-roles/index.html",
+        "manifest": "napplets/dist/group-roles/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:group-role-manager/open-v1"
+        ],
+        "host_validation": "local_scoped_workspace",
+        "scope": "Guild-only navigation. Operations require the scoped host guild capability. No production authentication or live external adapters in the demo."
       }
     }
   ],

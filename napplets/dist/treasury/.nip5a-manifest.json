@@ -1,0 +1,27 @@
+{
+  "kind": 35129,
+  "created_at": 1789029167,
+  "tags": [
+    [
+      "d",
+      "600b-treasury"
+    ],
+    [
+      "path",
+      "/index.html",
+      "de87d569206738e8c39276ea65184c9e73d9cee0eb8bb58d0442d50ad8a1f373"
+    ],
+    [
+      "x",
+      "0470fa15ab1e28712e93477def4ccd3aba15260ca97212870111344593852842",
+      "aggregate"
+    ],
+    [
+      "archetype",
+      "treasury-view",
+      "napplet:treasury-view/open-v1"
+    ]
+  ],
+  "content": "",
+  "aggregateHash": "0470fa15ab1e28712e93477def4ccd3aba15260ca97212870111344593852842"
+}

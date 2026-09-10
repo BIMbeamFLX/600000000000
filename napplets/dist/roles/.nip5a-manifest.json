@@ -1,0 +1,27 @@
+{
+  "kind": 35129,
+  "created_at": 1789029167,
+  "tags": [
+    [
+      "d",
+      "600b-roles"
+    ],
+    [
+      "path",
+      "/index.html",
+      "292072659cd70d77cea06fc8bfce96904f0eee28b04e54dcbfd35fdb89f8b5f6"
+    ],
+    [
+      "x",
+      "086c0b8c17258ac8f1a0cff0f62002df8ad79eddfc9aa4ed3eb739fcc6626846",
+      "aggregate"
+    ],
+    [
+      "archetype",
+      "role-manager",
+      "napplet:role-manager/open-v1"
+    ]
+  ],
+  "content": "",
+  "aggregateHash": "086c0b8c17258ac8f1a0cff0f62002df8ad79eddfc9aa4ed3eb739fcc6626846"
+}

@@ -8,6 +8,8 @@ import { join } from 'node:path';
 import { schnorr } from '@noble/curves/secp256k1.js';
 import { RecoveryLedger, recoveryEvent } from './recovery.mjs';
 import { recoveryCapability } from './recovery-capability.mjs';
+import { ExternalJournal } from './external-journal.mjs';
+import { synchronizeRecovery } from './recovery-followups.mjs';
 
 const secrets = Array.from({ length: 10 }, (_, i) => Buffer.from((i + 1).toString(16).padStart(64, '0'), 'hex'));
 const keys = secrets.map(secret => Buffer.from(schnorr.getPublicKey(secret)).toString('hex'));
@@ -28,6 +30,35 @@ function approve(f, record) {
   f.ledger.submit(record.caseId, 'notice', f.sign(record, 'notice', 1));
   for (let i = 1; i <= 6; i++) f.ledger.submit(record.caseId, 'approve', f.sign(record, 'approve', i));
 }
+
+test('recovery follow-ups revoke first, reconcile partial completion and publish last', async t => {
+  const f = fixture(); const journal = new ExternalJournal(':memory:');
+  t.after(() => { f.ledger.close(); journal.close(); });
+  const r = f.ledger.prepare('m0', keys[7]); approve(f, r);
+  await assert.rejects(() => synchronizeRecovery(f.ledger, journal, r.caseId, {}), /not been activated/);
+  f.time(start + delay); f.ledger.activate(r.caseId);
+  assert.throws(() => f.ledger.sessionVersion('m0'), /synchronization pending/);
+  assert.deepEqual(await synchronizeRecovery(f.ledger, journal, r.caseId, {}), { state: 'blocked', task: 'revoke-old-sessions' });
+  const order = []; let removed = false;
+  const adapter = name => ({ protocol: 'marmot', execute: async () => {
+    order.push(name); if (name === 'marmot' && !removed) throw Error('lost response');
+    return { confirmed: true, receiptId: name };
+  }, status: async () => ({ confirmed: removed, receiptId: name }) });
+  const adapters = { sessions: adapter('sessions'), marmot: adapter('marmot'), publication: adapter('publication') };
+  const connected = recoveryCapability(f.ledger, { getPublicKey: async () => keys[7] }, undefined,
+    caseId => synchronizeRecovery(f.ledger, journal, caseId, adapters));
+  assert.equal((await connected.activate({ caseId: r.caseId })).followupPending, true);
+  assert.deepEqual(order, ['sessions', 'marmot']);
+  assert.equal(f.ledger.inspect(r.caseId).followupPending, true);
+  removed = true;
+  assert.equal((await synchronizeRecovery(f.ledger, journal, r.caseId, adapters)).state, 'confirmed');
+  assert.deepEqual(order, ['sessions', 'marmot', 'publication']);
+  assert.equal(f.ledger.inspect(r.caseId).followupPending, false);
+  assert.equal(f.ledger.sessionVersion('m0'), 2);
+  assert.equal(f.ledger.member('m0').claimed, true);
+  await synchronizeRecovery(f.ledger, journal, r.caseId, adapters);
+  assert.deepEqual(order, ['sessions', 'marmot', 'publication']);
+});
 test('real signatures plus 85% quorum and notice delay rotate identity once, preserving claims', () => {
   const f = fixture(); const record = f.ledger.prepare('m0', keys[7]); approve(f, record);
   assert.equal(f.ledger.inspect(record.caseId).required, 6);

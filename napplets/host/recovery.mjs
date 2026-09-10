@@ -153,6 +153,16 @@ export class RecoveryLedger {
   }
   /** Host authorization must compare the current identity version on every protected operation. */
   member(memberId) { const members = this.#load().members; requireThat(Object.hasOwn(members, memberId), 'Unknown member'); return members[memberId]; }
+  /** Gate ordinary guild sessions until the current rotation has all external receipts. */
+  sessionVersion(memberId) {
+    const state = this.#load(); requireThat(Object.hasOwn(state.members, memberId), 'Unknown member');
+    const member = state.members[memberId];
+    const pending = state.outbox.some(job => job.status === 'pending'
+      && state.cases[job.caseId].record.memberId === memberId
+      && state.cases[job.caseId].record.expectedVersion + 1 === member.version);
+    requireThat(!pending, 'Recovery synchronization pending');
+    return member.version;
+  }
   /** Authorize private case reads against current identities, never a supplied roster. */
   canRead(caseId, pubkey) {
     const state = this.#load(); requireThat(Object.hasOwn(state.cases, caseId), 'Unknown case');
@@ -161,4 +171,16 @@ export class RecoveryLedger {
       || c.guardians.some(g => g.pubkey === pubkey && state.members[g.memberId].pubkey === pubkey);
   }
   outbox() { return this.#load().outbox; }
+  /** Trusted worker records only externally confirmed follow-ups, never a client-supplied success. */
+  confirmFollowup(caseId, task, receiptId) {
+    requireThat(typeof receiptId === 'string' && receiptId.length > 0 && receiptId.length <= 256, 'Invalid follow-up receipt');
+    return this.#write('followup-confirmed', state => {
+      const job = state.outbox.find(item => item.caseId === caseId);
+      requireThat(job && job.tasks.includes(task), 'Unknown recovery follow-up');
+      job.receipts ??= {};
+      job.receipts[task] ??= receiptId;
+      if (job.tasks.every(item => Object.hasOwn(job.receipts, item))) job.status = 'confirmed';
+      return { caseId, task, receiptId: job.receipts[task], status: job.status };
+    });
+  }
 }

@@ -4,7 +4,9 @@
   "scripts": {
     "test:unit": "node --test tests/*.test.mjs",
     "test:e2e": "playwright test",
-    "test:e2e:headed": "playwright test --headed"
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:guild": "playwright test --config playwright.guild.config.ts",
+    "guild:demo": "node scripts/guild-workspace.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.52.0",
