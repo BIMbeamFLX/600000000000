@@ -19,7 +19,7 @@ const actor = () => ({ memberId: 'demo-organizer', version: 1 });
 const capabilities = Object.fromEntries(Object.keys(workspaceTools).map(tool => [tool, guildCapability(store, journal, actor, tool)]));
 const bridge = `<script>
 const pending=new Map();let sequence=0;
-window.napplet={guild:Object.fromEntries(['read','command','group'].map(method=>[method,payload=>new Promise((resolve,reject)=>{
+window.napplet={guild:Object.fromEntries(['read','command','group','cancel'].map(method=>[method,payload=>new Promise((resolve,reject)=>{
  const id=++sequence;const timeout=setTimeout(()=>{pending.delete(id);reject(Error('Host request timed out. Reload before repeating a mutation.'));},15000);
  pending.set(id,{resolve,reject,timeout});parent.postMessage({type:'guild-demo-request',id,method,payload},${JSON.stringify(origin)});
 })]))};
@@ -34,7 +34,7 @@ function home(url) {
   <header><b>600.wtf / GUILD WORKSPACE</b><p>LOCAL DEMO · fictional members · no real groups, balances or purchases. Changes persist in a local SQLite file.</p></header><nav>${links}</nav><main>${selected.map(tool => `<iframe title="${workspaceTools[tool].title}" data-tool="${tool}" sandbox="allow-scripts" src="/tool/${tool}"></iframe>`).join('')}</main>
   <script>addEventListener('message',async event=>{const frame=[...document.querySelectorAll('iframe')].find(frame=>frame.contentWindow===event.source);
   if(!frame||event.origin!=='null'||event.data?.type!=='guild-demo-request')return;const {id,method,payload}=event.data;
-  if(!Number.isSafeInteger(id)||!['read','command','group'].includes(method))return;
+  if(!Number.isSafeInteger(id)||!['read','command','group','cancel'].includes(method))return;
   try{const response=await fetch('/api',{method:'POST',headers:{'Content-Type':'application/json','X-Guild-Demo':${JSON.stringify(token)}},body:JSON.stringify({tool:frame.dataset.tool,method,payload})});
   const result=await response.json();frame.contentWindow.postMessage({type:'guild-demo-response',id,...result},'*');}
   catch{frame.contentWindow.postMessage({type:'guild-demo-response',id,error:'Local host unavailable'},'*');}});</script></html>`;
@@ -58,7 +58,7 @@ const server = createServer(async (request, response) => {
       if (request.headers.origin !== origin || request.headers['x-guild-demo'] !== token) { response.writeHead(403).end(); return; }
       let body = ''; for await (const chunk of request) { body += chunk; if (Buffer.byteLength(body) > 8192) { response.writeHead(413).end(); return; } }
       const data = JSON.parse(body);
-      if (!Object.hasOwn(capabilities, data.tool) || !['read', 'command', 'group'].includes(data.method)) throw Error('Unknown tool capability');
+      if (!Object.hasOwn(capabilities, data.tool) || !['read', 'command', 'group', 'cancel'].includes(data.method)) throw Error('Unknown tool capability');
       try { const result = await capabilities[data.tool][data.method](data.payload); response.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify({ result })); }
       catch (error) { response.writeHead(400, { 'Content-Type': 'application/json' }).end(JSON.stringify({ error: error.message })); }
       return;

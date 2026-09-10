@@ -3,7 +3,7 @@ import { inc } from '@napplet/sdk';
 import { el, embedded, frame } from './ui';
 
 export type Row = Record<string, unknown>;
-type GuildService = { read(): Promise<unknown>; command(request: Row): Promise<unknown>; group(request: Row): Promise<unknown> };
+type GuildService = { read(): Promise<unknown>; command(request: Row): Promise<unknown>; group(request: Row): Promise<unknown>; cancel(request: Row): Promise<unknown> };
 /** Shared presentation only. Each bundle has its own entrypoint and host-granted capability. */
 export function tool(title: string, intro: string, slug: string) {
   const app = frame(title, intro);
@@ -11,7 +11,7 @@ export function tool(title: string, intro: string, slug: string) {
   // Retain a command ID after a transport error. A retry of the same input is not a new mutation.
   const pendingCommands = new Map<string, Row>();
   const service: GuildService | undefined = host ? {
-    read: () => host.read(), group: request => host.group(request),
+    read: () => host.read(), group: request => host.group(request), cancel: request => host.cancel(request),
     command: async request => {
       const key = JSON.stringify([request.action, request.input]);
       const pending = pendingCommands.get(key) ?? request; pendingCommands.set(key, pending);

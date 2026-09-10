@@ -63,6 +63,7 @@ command({requestId, action, input}): Promise<unknown>
 group({requestId, groupId, memberId, role}): Promise<{
   state: 'confirmed' | 'uncertain'; receiptId?: string
 }>
+cancel({requestId}): Promise<{ state: 'cancelled' }>
 ```
 
 `guildCapability` fixes the tool and allowed actions on the host. A tasks frame
@@ -113,18 +114,27 @@ the chosen client's actual supported authorization semantics or reject them.
 
 The current [Marmot specification](https://github.com/marmot-protocol/marmot)
 separates protocol core, transports and features; its old MIP-era documents are
-deprecated. The inspected Nappelin Hangar has no Marmot client. There is therefore
+deprecated. The inspected Nappelin Hangar has no production Marmot client. There is therefore
 **no live Marmot adapter in this change**. No public-chat fallback is provided.
 
-`ExternalJournal` records dispatch before network execution. An uncertain result
-is queried on retry, never automatically executed again. Unresolved group requests
-are restored from SQLite only to the same actor, identity version and action.
-If a process dies before dispatch, even that job requires explicit reconciliation
-instead of a blind retry. Adapters must enforce bounded timeouts, durable request
-IDs and group-wide serialization across different requests. Guard against recovery
-or member-role changes while a network operation is in flight.
+`ExternalJournal` hashes a canonical encoding of each request so key order cannot
+fork resume. Authorize/validation failures before `execute` propagate and reject
+the prepared row; they are not stored as `uncertain`. A `prepared` row that never
+dispatched resumes by dispatching `execute` once, or the same actor can `cancel`
+it. Uncertain results after `execute`/`status` are queried on retry, never
+automatically executed again. Two request IDs for the same `groupId` cannot
+`execute` concurrently; recovery follow-ups without `groupId` skip that queue.
+Unresolved group requests are restored from SQLite only to the same actor,
+identity version and action. Cancelled jobs are omitted from `pending()`.
+Confirmed jobs cannot be cancelled. Guard against recovery or member-role changes
+while a network operation is in flight.
 
 ## Recovery wiring
+
+Avatar recovery is **not offered** in this workspace: the key-recovery napplet
+shows an unavailable status, mutating buttons stay disabled, and Bearlett restore
+is not connected. Host modules remain for separate audit; they are not a live
+member flow.
 
 `nip07RecoverySigner(extension, confirm)` binds the host NIP-07 signer to an explicit
 consent screen and checks account changes before/after signing. The recovery ledger

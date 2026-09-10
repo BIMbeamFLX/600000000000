@@ -44,5 +44,11 @@ export function guildCapability(store, journal, actor, tool, adapters = {}) {
         requireValue(after.memberId === source.memberId && after.version === source.version, 'Identity changed');
       });
     },
+    async cancel(request) {
+      principal(); requireValue(groupActions[tool], 'No group authority for this tool');
+      requireValue(request && Object.keys(request).sort().join(',') === 'requestId', 'Invalid cancel');
+      boundedId(request.requestId);
+      return journal.cancel(request.requestId, principal());
+    },
   };
 }

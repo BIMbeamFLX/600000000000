@@ -1,6 +1,9 @@
 # Avatar recovery and separate Bearlett restoration
 
-Implemented locally, not deployed. This supersedes the earlier 3-of-5 proposal in
+Implemented locally, not deployed. **Avatar recovery is not offered** in the
+chat-pilot UI: the key-recovery napplet shows an unavailable status and keeps
+mutating controls disabled. Bearlett restore is not connected from this guild
+tool. This supersedes the earlier 3-of-5 proposal in
 [elder identity design](elder-identity-napplet.md) for the new implementation.
 Actual production guardians have not been designated or approved.
 
@@ -11,7 +14,7 @@ Actual production guardians have not been designated or approved.
 | `napplets/host/recovery.mjs` | SQLite identity ledger, NIP-01 Schnorr proof verification, immutable case/policy binding, activation and pending follow-ups |
 | `napplets/host/recovery-capability.mjs` | Host-side signer/account binding and scoped access |
 | `napplets/dist/key-recovery/index.html` | One recovery UI, no direct signer, relay or wallet access |
-| Bearlett `napplet:wallet/recovery-v1` | Separate, user-reviewed navigation to existing wallet backup/restore |
+| Bearlett `napplet:wallet/recovery-v1` | Not connected from this guild tool; wallet restore stays independent |
 
 Requires Node.js 24 and `npm --prefix napplets ci --ignore-scripts`.
 Run `npm --prefix napplets run test:recovery`, `npm --prefix napplets run typecheck`,
@@ -71,13 +74,15 @@ action `open`, payload `{version:1,guildId:"600b",caseId}`. Invalid/foreign navi
 is rejected. Missing host leaves all identity-changing controls disabled. Context
 does not constitute proof or permission.
 
-After activated mapping, outgoing role `wallet`, action `open`, convention
-`napplet:wallet/recovery-v1` carries only `{version:1,guildId,memberId,caseId}`.
+The chat-pilot catalog does not advertise `napplet:wallet/recovery-v1` as
+available. A future host may still use outgoing role `wallet`, action `open`,
+convention `napplet:wallet/recovery-v1` with only `{version:1,guildId,memberId,caseId}`.
 All IDs are ASCII letters/digits/underscore/hyphen, 1–128 characters. No keys,
 approval flags, evidence, seed, backup, invoice or bearer token cross this intent.
 Bearlett treats it as unverified navigation, requires its normal unlock and review,
 and opens its existing Backup tab. It never resets/rekeys/restores a vault in response.
-Delivery success only means the request was delivered.
+Delivery success only means the request was delivered. This guild UI does not
+invoke that handoff.
 
 ## Publication and revocation limits
 

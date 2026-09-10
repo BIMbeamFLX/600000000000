@@ -13,9 +13,9 @@ An archetype names a role. A payload convention defines the data that role accep
 NAP-INTENT supplies host-mediated discovery and dispatch. Reuse an upstream role
 only when its boundary fits; application IDs do not determine role identity.
 The [upstream registry](https://github.com/napplet/naps/blob/master/ARCHETYPES.md)
-lists `dm` as a draft. Its [boundary](https://github.com/napplet/naps/blob/master/naat/dm.md)
-includes private one-to-one or small-group conversation, fitting the party chat.
-Large community broadcasts are outside this napplet's role.
+lists `dm` as a draft for one-to-one or small-group conversation. Guild party chat
+does **not** use that role: it is a local `group-chat` proposal and remains
+unimplemented. Large community broadcasts are outside this napplet's role.
 
 Other guild roles below are unregistered proposals. Before shipping, recheck the
 registry for a compatible role and seek upstream review where needed. Do not
@@ -46,8 +46,7 @@ still unverified. General guild contract examples below remain design data.
 
 ## Roles and accepted open contracts
 
-All proposed conventions end in `open-v1`, except the existing `dm` role, whose
-new guild payload convention is `napplet:dm/open-600b-v1`. The action is `open`:
+All proposed conventions end in `open-v1`. The action is `open`:
 opening a review or claim tool must not perform its privileged operation.
 
 | Napplet | Archetype | Required context beyond base | Optional context |
@@ -58,7 +57,7 @@ opening a review or claim tool must not perform its privileged operation.
 | Local chapters | `chapter-directory` | — | — |
 | Calendar | `calendar` | — | — |
 | Operations | `operation-board` | — | — |
-| Party chat | `dm` (upstream draft) | `groupRef` | — |
+| Party chat | `group-chat` | `groupRef` | — |
 | Group invitations | `group-manager` | — | — |
 | Group join | `group-join` | — | — |
 | Group removal | `group-removal` | — | — |
@@ -152,7 +151,7 @@ Proposed composition examples:
 
 - Roster → Identity review → Key recovery, only when a case is available.
 - Admissions → Group invitations and Welcome claim, with server-verified context.
-- Local chapters → Calendar → Operations → Party chat, when an authorized group exists.
+- Local chapters → Calendar → Operations. Party chat is an unimplemented `group-chat` role, not a `dm` handoff.
 - Guild bank → Welcome claim for the current user's eligible entitlement.
 - Raffle organizer → Ticket printer with a host-authorized raffle ID, never bearer secrets.
 

@@ -86,10 +86,12 @@ test('Marmot UI restores an uncertain request and reconciles its original ID', a
     if (!pending) { pending = request; return { state: 'uncertain' }; }
     pending = undefined; return { state: 'confirmed', receiptId: 'fixture-mls-commit' };
   });
+  await page.exposeFunction('fixtureCancel', () => ({ state: 'cancelled' }));
   await page.addInitScript(() => {
     const fixture = window as any;
     Object.defineProperty(window, 'napplet', { configurable: true, get: () => ({ guild: {
       read: () => fixture.fixtureRead(), group: (request: unknown) => fixture.fixtureGroup(request),
+      cancel: (request: unknown) => fixture.fixtureCancel(request),
     } }), set: () => {} });
   });
   await page.goto('/?tools=group-invite');
@@ -104,4 +106,39 @@ test('Marmot UI restores an uncertain request and reconciles its original ID', a
   await frame.getByRole('button', { name: 'Check pending request' }).click();
   await expect(frame.getByRole('status')).toHaveText('Confirmed by the Marmot client.');
   expect(calls).toHaveLength(2); expect(calls[1]).toEqual(calls[0]);
+});
+
+test('Marmot UI cancels a pending request and allows a new one', async ({ page }) => {
+  let pending: Record<string, unknown> | undefined; const calls: Record<string, unknown>[] = [];
+  await page.exposeFunction('fixtureRead', () => ({ available: true, pending: pending ? [pending] : [] }));
+  await page.exposeFunction('fixtureGroup', (request: Record<string, unknown>) => {
+    calls.push(request);
+    pending = request; return { state: 'uncertain' };
+  });
+  await page.exposeFunction('fixtureCancel', (request: Record<string, unknown>) => {
+    calls.push({ method: 'cancel', ...request });
+    pending = undefined; return { state: 'cancelled' };
+  });
+  await page.addInitScript(() => {
+    const fixture = window as any;
+    Object.defineProperty(window, 'napplet', { configurable: true, get: () => ({ guild: {
+      read: () => fixture.fixtureRead(), group: (request: unknown) => fixture.fixtureGroup(request),
+      cancel: (request: unknown) => fixture.fixtureCancel(request),
+    } }), set: () => {} });
+  });
+  await page.goto('/?tools=group-invite');
+  const frame = page.frameLocator('iframe');
+  await frame.getByLabel('Host group reference').fill('group-1');
+  await frame.getByLabel('Member ID').fill('demo-member');
+  await frame.getByRole('button', { name: 'Request invite', exact: true }).click();
+  await expect(frame.getByRole('status')).toContainText('Outcome uncertain');
+  await expect(frame.getByLabel('Host group reference')).toBeDisabled();
+  await frame.getByRole('button', { name: 'Cancel pending request' }).click();
+  await expect(frame.getByRole('status')).toContainText('cancelled');
+  await expect(frame.getByLabel('Host group reference')).toBeEnabled();
+  await frame.getByLabel('Member ID').fill('other-member');
+  await frame.getByRole('button', { name: 'Request invite', exact: true }).click();
+  await expect(frame.getByRole('status')).toContainText('Outcome uncertain');
+  expect(calls[0]).toMatchObject({ groupId: 'group-1', memberId: 'demo-member' });
+  expect(calls.at(-1)).toMatchObject({ groupId: 'group-1', memberId: 'other-member' });
 });

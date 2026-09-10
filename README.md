@@ -25,7 +25,7 @@ sind geschlossen.
 |---|---|
 | Rock Garden | Responsive Welcome-Seite; NIP-07 liest einen öffentlichen Schlüssel für die lokale Anzeige |
 | Elders-Desk | Eingefrorenes Verzeichnis der 30 Gründer; Schlüsselabgleich; Claims bleiben gesperrt |
-| Avatar-Recovery | SQLite-Kern mit Signaturprüfung, eigenes Napplet und separater Bearlett-Restore-Intent; noch keine Produktionsanbindung |
+| Avatar-Recovery | Nicht angeboten. Das Napplet zeigt den Status als nicht verfügbar; Bearlett-Restore ist nicht angebunden |
 | Mitglieder-Napplet | Durchsuchbare Gründerliste, aufgezeichneter Prüfstatus, optionaler Identity-Review-Intent |
 | Raffle-Planer | Preisstufen, Presets, Ticketanzahl, Sats-Budget und Export eines Vorschau-Plans |
 | Ticket-Printer | Eigenständiges Werkzeug; Plan importieren, Loslayout ansehen, Vorschau-PDF herunterladen |

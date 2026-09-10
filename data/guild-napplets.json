@@ -1,7 +1,7 @@
 {
   "version": 1,
   "state": "design_catalog_with_fifteen_builds",
-  "note": "19 function boundaries; 15 independent builds. The local workspace uses fictional members. Production recovery, Marmot, treasury and FIPS require authorized host adapters.",
+  "note": "19 function boundaries; 15 independent builds. The local workspace uses fictional members. Avatar recovery is not offered in this release. Production Marmot, treasury and FIPS require authorized host adapters.",
   "napplets": [
     {
       "id": "guild-roster",
@@ -264,12 +264,7 @@
           }
         }
       ],
-      "dispatches": [
-        {
-          "archetype": "dm",
-          "convention": "napplet:dm/open-600b-v1"
-        }
-      ],
+      "dispatches": [],
       "implementation": {
         "state": "preview_built",
         "entrypoint": "napplets/dist/tasks/index.html",
@@ -289,13 +284,13 @@
         "marmot_messages"
       ],
       "archetype": {
-        "slug": "dm",
-        "status": "upstream_draft"
+        "slug": "group-chat",
+        "status": "local_proposal"
       },
       "accepts": [
         {
           "action": "open",
-          "convention": "napplet:dm/open-600b-v1",
+          "convention": "napplet:group-chat/open-v1",
           "status": "local_payload_proposal",
           "payload": {
             "version": 1,
@@ -341,12 +336,7 @@
           }
         }
       ],
-      "dispatches": [
-        {
-          "archetype": "dm",
-          "convention": "napplet:dm/open-600b-v1"
-        }
-      ],
+      "dispatches": [],
       "implementation": {
         "state": "preview_built",
         "entrypoint": "napplets/dist/group-invite/index.html",
@@ -513,14 +503,7 @@
         "accepted_conventions": [
           "napplet:key-recovery/open-v1"
         ],
-        "optional_dispatches": [
-          {
-            "archetype": "wallet",
-            "convention": "napplet:wallet/recovery-v1",
-            "availability": "requires_compatible_Bearlett_handler"
-          }
-        ],
-        "scope": "Host-backed identity recovery; unavailable without authorized guildRecovery extension. Wallet restore is separate."
+        "scope": "Unavailable for this release. Avatar recovery is not offered; Bearlett restore is not connected."
       }
     },
     {

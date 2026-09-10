@@ -5,7 +5,7 @@ import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { GuildStore } from './guild-store.mjs';
-import { ExternalJournal } from './external-journal.mjs';
+import { ExternalJournal, canonicalDigest } from './external-journal.mjs';
 import { guildCapability } from './guild-capability.mjs';
 import { nip07RecoverySigner } from './recovery-followups.mjs';
 
@@ -120,6 +120,109 @@ test('account switches during adapter authorization or reading discard results',
   actor = officer;
   const treasury = guildCapability(f.store, f.journal, () => actor, 'treasury', { treasury: { read: async () => { actor = member; return { assets: [] }; } } });
   await assert.rejects(() => treasury.read(), /Identity changed/);
+});
+
+test('shuffled request keys share a digest; retry uses status and confirms once', async t => {
+  const { journal } = fixture(t); let executed = 0; let queried = 0;
+  const adapter = { execute: async () => { executed++; throw Error('response lost'); }, status: async () => { queried++; return { confirmed: true, receiptId: 'mls-commit-7' }; } };
+  const request = { requestId: 'invite-order', groupId: 'group-1', memberId: 'member', role: '', action: 'invite', actorId: 'officer', identityVersion: 1 };
+  const shuffled = { identityVersion: 1, actorId: 'officer', action: 'invite', role: '', memberId: 'member', groupId: 'group-1', requestId: 'invite-order' };
+  assert.deepEqual(await journal.run(request, adapter, async () => {}), { state: 'uncertain' });
+  assert.equal((await journal.run(shuffled, adapter, async () => {})).state, 'confirmed');
+  assert.equal((await journal.run({ ...shuffled, role: '' }, adapter, async () => {})).state, 'confirmed');
+  assert.equal(executed, 1); assert.equal(queried, 1);
+  const followup = { requestId: 'case-1-sessions', task: 'revoke-old-sessions', caseId: 'case-1', memberId: 'm0', oldKey: 'aa', newKey: 'bb', identityVersion: 2 };
+  const followupShuffled = { identityVersion: 2, newKey: 'bb', oldKey: 'aa', memberId: 'm0', caseId: 'case-1', task: 'revoke-old-sessions', requestId: 'case-1-sessions' };
+  executed = queried = 0;
+  assert.deepEqual(await journal.run(followup, adapter, async () => {}), { state: 'uncertain' });
+  assert.equal((await journal.run(followupShuffled, adapter, async () => {})).state, 'confirmed');
+  assert.equal(executed, 1); assert.equal(queried, 1);
+});
+
+test('authorize failure after insert is not uncertain and a new requestId can execute', async t => {
+  const { journal } = fixture(t); let calls = 0; let executions = 0; let queries = 0;
+  const authorize = async () => { calls++; if (calls === 2) throw Error('Marmot group action not authorized'); };
+  const adapter = { execute: async () => { executions++; return { confirmed: true, receiptId: 'ok' }; }, status: async () => { queries++; return { confirmed: true, receiptId: 'ok' }; } };
+  const first = { ...group, requestId: 'invite-a', action: 'invite', actorId: 'officer', identityVersion: 1 };
+  await assert.rejects(() => journal.run(first, adapter, authorize), /not authorized/);
+  assert.equal(executions, 0); assert.equal(queries, 0);
+  assert.deepEqual(journal.pending(officer, 'invite'), []);
+  const second = { ...first, requestId: 'invite-b' };
+  assert.equal((await journal.run(second, adapter, async () => {})).state, 'confirmed');
+  assert.equal(executions, 1); assert.equal(queries, 0);
+  await assert.rejects(() => journal.run(first, adapter, async () => {}), /rejected|authorized/);
+});
+
+test('prepared row resumes to execute exactly once', async t => {
+  const path = join(mkdtempSync(join(tmpdir(), '600b-prepared-')), 'jobs.sqlite');
+  const { DatabaseSync } = await import('node:sqlite');
+  const schema = new ExternalJournal(path); schema.close();
+  const request = { ...group, action: 'invite', actorId: 'officer', identityVersion: 1 };
+  const db = new DatabaseSync(path);
+  db.prepare("INSERT INTO external_jobs VALUES (?,?,'prepared',NULL,?)").run(request.requestId, canonicalDigest(request), JSON.stringify(request));
+  db.close();
+  const journal = new ExternalJournal(path); t.after(() => journal.close());
+  let executed = 0; let queried = 0;
+  const adapter = { execute: async () => { executed++; return { confirmed: true, receiptId: 'prepared-1' }; }, status: async () => { queried++; return { confirmed: true, receiptId: 'prepared-1' }; } };
+  assert.equal((await journal.run(request, adapter, async () => {})).state, 'confirmed');
+  assert.equal((await journal.run(request, adapter, async () => {})).state, 'confirmed');
+  assert.equal(executed, 1); assert.equal(queried, 0);
+});
+
+test('two requestIds for one groupId cannot execute in parallel', async t => {
+  const { journal } = fixture(t); let executeCount = 0; let release; let entered;
+  const started = new Promise(resolve => { entered = resolve; });
+  const wait = new Promise(resolve => { release = resolve; });
+  const adapter = {
+    execute: async request => { executeCount++; entered(); await wait; return { confirmed: true, receiptId: `r-${request.requestId}` }; },
+    status: async () => ({}),
+  };
+  const first = journal.run({ ...group, requestId: 'invite-a', action: 'invite', actorId: 'officer', identityVersion: 1 }, adapter, async () => {});
+  await started;
+  await assert.rejects(() => journal.run({ ...group, requestId: 'invite-b', action: 'invite', actorId: 'officer', identityVersion: 1 }, adapter, async () => {}), /in flight/);
+  assert.equal(executeCount, 1);
+  release();
+  assert.equal((await first).state, 'confirmed');
+  assert.equal((await journal.run({ ...group, requestId: 'invite-b', action: 'invite', actorId: 'officer', identityVersion: 1 }, adapter, async () => {})).state, 'confirmed');
+  assert.equal(executeCount, 2);
+  let recoveryRuns = 0;
+  const recoveryAdapter = { execute: async () => { recoveryRuns++; return { confirmed: true, receiptId: `rec-${recoveryRuns}` }; }, status: async () => ({}) };
+  const a = journal.run({ requestId: 'case-sessions', task: 'revoke-old-sessions', caseId: 'c1', memberId: 'm0', oldKey: 'aa', newKey: 'bb', identityVersion: 2 }, recoveryAdapter, async () => {});
+  const b = journal.run({ requestId: 'case-marmot', task: 'renew-marmot-access', caseId: 'c1', memberId: 'm0', oldKey: 'aa', newKey: 'bb', identityVersion: 2 }, recoveryAdapter, async () => {});
+  assert.deepEqual([await a, await b].map(result => result.state), ['confirmed', 'confirmed']);
+  assert.equal(recoveryRuns, 2);
+});
+
+test('cancel removes pending group jobs and allows a new request', async t => {
+  const { journal, tool } = fixture(t, { marmot: { protocol: 'marmot', authorize: async () => true, execute: async () => { throw Error('response lost'); }, status: async () => ({}) } });
+  const request = { ...group, action: 'invite', actorId: 'officer', identityVersion: 1 };
+  const adapter = { execute: async () => { throw Error('response lost'); }, status: async () => ({}) };
+  assert.deepEqual(await journal.run(request, adapter, async () => {}), { state: 'uncertain' });
+  assert.deepEqual(journal.pending(officer, 'invite'), [group]);
+  assert.throws(() => journal.cancel(request.requestId, member), /Not authorized/);
+  assert.deepEqual(journal.cancel(request.requestId, officer), { state: 'cancelled' });
+  assert.deepEqual(journal.pending(officer, 'invite'), []);
+  assert.throws(() => journal.cancel(request.requestId, officer), /cancelled/);
+  const next = { ...request, requestId: 'invitation-2' };
+  const done = { execute: async () => ({ confirmed: true, receiptId: 'after-cancel' }), status: async () => ({}) };
+  assert.equal((await journal.run(next, done, async () => {})).state, 'confirmed');
+  assert.throws(() => journal.cancel(next.requestId, officer), /cannot be cancelled/);
+  await assert.rejects(() => tool('tasks').cancel({ requestId: next.requestId }), /No group authority/);
+  const invite = tool('group-invite');
+  assert.deepEqual(await invite.group({ ...group, requestId: 'invitation-3' }), { state: 'uncertain' });
+  assert.deepEqual(await invite.cancel({ requestId: 'invitation-3' }), { state: 'cancelled' });
+  assert.deepEqual((await invite.read()).pending, []);
+});
+
+test('adapter receipts require confirmed plus receiptId; unconfirmed results stay uncertain', async t => {
+  const { journal } = fixture(t);
+  const missing = { ...group, requestId: 'missing-receipt', groupId: 'group-a' };
+  const falseFlag = { ...group, requestId: 'false-flag', groupId: 'group-b' };
+  const queued = { ...group, requestId: 'queued', groupId: 'group-c' };
+  assert.deepEqual(await journal.run(missing, { execute: async () => ({ confirmed: true }), status: async () => ({ confirmed: true }) }, async () => {}), { state: 'uncertain' });
+  assert.deepEqual(await journal.run(falseFlag, { execute: async () => ({ confirmed: false, receiptId: 'nope' }), status: async () => ({ confirmed: false, receiptId: 'nope' }) }, async () => {}), { state: 'uncertain' });
+  assert.deepEqual(await journal.run(queued, { execute: async () => ({ queued: true, receiptId: 'http-200' }), status: async () => ({ ok: true, receiptId: 'http-200' }) }, async () => {}), { state: 'uncertain' });
+  assert.equal((await journal.run(missing, { execute: async () => ({ confirmed: true, receiptId: 'late' }), status: async () => ({ confirmed: true, receiptId: 'late' }) }, async () => {})).receiptId, 'late');
 });
 
 test('NIP-07 requires explicit consent and a stable signer before and after signing', async () => {
