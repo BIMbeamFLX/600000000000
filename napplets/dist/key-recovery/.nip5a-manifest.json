@@ -1,0 +1,27 @@
+{
+  "kind": 35129,
+  "created_at": 1789027411,
+  "tags": [
+    [
+      "d",
+      "600b-key-recovery"
+    ],
+    [
+      "path",
+      "/index.html",
+      "16326e945ce5857148e3f24e45b192248f2291262c959087ceec5087ac27933e"
+    ],
+    [
+      "x",
+      "a1ed206d45319908a2d8cb285a307e7b6a3f58ced30c4932f3e09ba8741451fb",
+      "aggregate"
+    ],
+    [
+      "archetype",
+      "key-recovery",
+      "napplet:key-recovery/open-v1"
+    ]
+  ],
+  "content": "",
+  "aggregateHash": "a1ed206d45319908a2d8cb285a307e7b6a3f58ced30c4932f3e09ba8741451fb"
+}

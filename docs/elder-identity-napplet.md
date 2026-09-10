@@ -1,5 +1,10 @@
 # Elder identity review and recovery napplet
 
+Update 10 September: a [local recovery implementation](recovery-implementation.md)
+now exists with an explicit 85% designated-guardian policy and separate Bearlett
+restore navigation. The 3-of-5 policy below is historical. No live guardian roster,
+Nappelin bridge or production activation has been enabled.
+
 Design for the next implementation step, 9 September 2026. No live identity
 mutation, guardian policy, multisignature wallet, or recovery endpoint is shipped
 by the static Elders page. A working host and authenticated backend are required.
