@@ -1,2 +1,3 @@
 import { defineConfig } from 'vitest/config';
-export default defineConfig({ test: { include: ['src/**/*.test.ts', 'vendor/**/*.test.ts'] } });
+import { directoryDefines } from './directory-data.ts';
+export default defineConfig({ define: directoryDefines, test: { include: ['src/**/*.test.ts', 'vendor/**/*.test.ts'] } });

@@ -43,7 +43,7 @@ test('outgoing intents resolve by role to an explicitly accepted convention', ()
 
 test('built previews match their advertised manifest contracts and content hashes', () => {
   const built = catalog.napplets.filter(tool => tool.implementation?.state === 'preview_built');
-  assert.equal(built.length, 2);
+  assert.equal(built.length, 3);
   for (const tool of built) {
     const manifest = readJson(`../${tool.implementation.manifest}`);
     const bytes = readFileSync(new URL(`../${tool.implementation.entrypoint}`, import.meta.url));

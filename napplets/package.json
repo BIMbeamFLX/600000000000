@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "build": "vite build --mode raffle && vite build --mode ticket-printer",
+    "build": "vite build --mode raffle && vite build --mode ticket-printer && vite build --mode member-directory",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },

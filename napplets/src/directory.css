@@ -1,0 +1,2 @@
+/* SPDX-License-Identifier: MIT */
+.member-list{list-style:none;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.member-list button{width:100%;text-align:left;overflow-wrap:anywhere}.member-list button[aria-pressed=true]{background:#1b1b19;color:#fffaf1}.member-address{overflow-wrap:anywhere}.receipt h2{margin-top:12px}@media(max-width:380px){.member-list{grid-template-columns:1fr}}

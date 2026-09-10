@@ -1,0 +1,27 @@
+{
+  "kind": 35129,
+  "created_at": 1789025754,
+  "tags": [
+    [
+      "d",
+      "600b-member-directory"
+    ],
+    [
+      "path",
+      "/index.html",
+      "fdc83946e14d1625b7c061ce3f24e599c80dbeda32ce6e07fa77fa81da2d010c"
+    ],
+    [
+      "x",
+      "4ea3ee364245fc19b4dbbcccb3e1e63a88bf734be89179d476192b45d1830a9a",
+      "aggregate"
+    ],
+    [
+      "archetype",
+      "member-directory",
+      "napplet:member-directory/open-v1"
+    ]
+  ],
+  "content": "",
+  "aggregateHash": "4ea3ee364245fc19b4dbbcccb3e1e63a88bf734be89179d476192b45d1830a9a"
+}

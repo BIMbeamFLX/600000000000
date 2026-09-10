@@ -2,16 +2,20 @@ import { defineConfig } from 'vite';
 import { viteSingleFile } from 'vite-plugin-singlefile';
 import { nip5aManifest } from '@napplet/vite-plugin';
 import { fileURLToPath } from 'node:url';
+import { directoryDefines } from './directory-data.ts';
 
 export default defineConfig(({ mode }) => {
   const printer = mode === 'ticket-printer';
-  const slug = printer ? 'ticket-printer' : 'raffle-manager';
+  const directory = mode === 'member-directory';
+  if (!['raffle', 'ticket-printer', 'member-directory'].includes(mode)) throw Error('Unknown napplet build mode.');
+  const slug = directory ? 'member-directory' : printer ? 'ticket-printer' : 'raffle-manager';
   return {
-    root: printer ? 'ticket-printer' : 'raffle',
+    define: directory ? directoryDefines : {},
+    root: mode,
     build: { outDir: fileURLToPath(new URL(`./dist/${mode}`, import.meta.url)), emptyOutDir: true, modulePreload: false },
     plugins: [viteSingleFile(), nip5aManifest({
-      nappletType: `600b-${mode}`, title: printer ? '600B Ticket Printer' : '600B Raffle',
-      description: printer ? 'Print clearly marked raffle previews.' : 'Plan an LNURLcash raffle.',
+      nappletType: `600b-${mode}`, title: directory ? '600B Member Directory' : printer ? '600B Ticket Printer' : '600B Raffle',
+      description: directory ? 'Browse the public founding member snapshot.' : printer ? 'Print clearly marked raffle previews.' : 'Plan an LNURLcash raffle.',
       artifactMode: 'single-file', requires: [],
       archetypes: [{ slug, convention: `napplet:${slug}/${printer ? 'preview-v1' : 'open-v1'}` }]
     })]
