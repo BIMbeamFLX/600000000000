@@ -4,15 +4,17 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "build": "vite build --mode raffle && vite build --mode ticket-printer && vite build --mode member-directory",
+    "build": "vite build --mode raffle && vite build --mode ticket-printer && vite build --mode member-directory && vite build --mode key-recovery",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:recovery": "node --test host/*.test.mjs"
   },
   "dependencies": {
     "@napplet/sdk": "0.28.0",
     "lnurlcash-kit": "0.8.1",
     "pdf-lib": "1.17.1",
-    "qrcode": "1.5.4"
+    "qrcode": "1.5.4",
+    "@noble/curves": "2.4.0"
   },
   "devDependencies": {
     "@napplet/vite-plugin": "0.14.1",

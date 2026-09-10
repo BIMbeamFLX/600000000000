@@ -92,6 +92,7 @@ downgrades private messages to public transport. Test compatibility when swappin
 one tool while keeping the rest of the portal unchanged.
 
 The public member directory now has its own snapshot build (see [contract](member-directory.md)).
-The other 13 tools remain designs. The two Raffle bundles use the pinned SDK and
+Key recovery also has a host-backed build and a local SQLite service; see [Recovery implementation](recovery-implementation.md).
+The other 12 tools remain designs. The two Raffle bundles use the pinned SDK and
 are tested with host-domain fixtures; full installed-host conformance and operational
 backend endpoints are not yet provided. See [Raffle integration](raffle-integration.md).

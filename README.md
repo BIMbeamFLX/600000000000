@@ -23,11 +23,12 @@ Gildenfunktionen sind dokumentierte Entwürfe. Echte Auszahlungen sind geschloss
 |---|---|
 | Rock Garden | Responsive Welcome-Seite; NIP-07 liest einen öffentlichen Schlüssel für die lokale Anzeige |
 | Elders-Desk | Eingefrorenes Verzeichnis der 30 Gründer; Schlüsselabgleich; Claims bleiben gesperrt |
+| Avatar-Recovery | SQLite-Kern mit Signaturprüfung, eigenes Napplet und separater Bearlett-Restore-Intent; noch keine Produktionsanbindung |
 | Mitglieder-Napplet | Durchsuchbare Gründerliste, aufgezeichneter Prüfstatus, optionaler Identity-Review-Intent |
 | Raffle-Planer | Preisstufen, Presets, Ticketanzahl, Sats-Budget und Export eines Vorschau-Plans |
 | Ticket-Printer | Eigenständiges Werkzeug; Plan importieren, Loslayout ansehen, Vorschau-PDF herunterladen |
 | Supply-Modell | Reproduzierbare 21-Jahres-Rechnung mit ganzen atomaren Einheiten und Tests |
-| Gilden-Komposition | 16 Werkzeuggrenzen, Archetypes, Intents und Berechtigungen dokumentiert; drei Preview-Builds vorhanden |
+| Gilden-Komposition | 16 Werkzeuggrenzen, Archetypes, Intents und Berechtigungen dokumentiert; vier Builds vorhanden; Recovery erfordert einen konfigurierten Host |
 | Marmot / FIPS / Liquid-Ausgabe | Architektur festgelegt; operative Dienste noch nicht angeschlossen |
 
 Ein angezeigter Nostr-Schlüssel ist noch keine authentifizierte Mitgliedschaft.
@@ -171,7 +172,7 @@ pebbles.* / elders.*     Community-Vorschau und Gründer-Desk
 data/                   Roster-Snapshot, Charta und Napplet-Katalog
 napplets/src/           Directory-, Raffle- und Printer-Implementierung
 napplets/vendor/        Unveränderter, gepinnter Upstream-Quellstand
-napplets/dist/          Drei gebaute HTML-Napplets mit Manifest-Metadaten
+napplets/dist/          Vier gebaute HTML-Napplets mit Manifest-Metadaten
 scripts/                Supply-Rechnung und reproduzierbare Screenshots
 tests/                  Browser-, Katalog- und Modelltests
 docs/                   Entscheidungen, Verträge, Quellen und Abbildungen
@@ -206,3 +207,5 @@ Charakterbilder werden durch diese Code-Lizenz nicht pauschal neu lizenziert.
 ![Mitgliederverzeichnis](docs/images/member-directory-desktop.png)
 
 Details zum [Mitglieder-Napplet und seinen Intent-Grenzen](docs/member-directory.md).
+
+[Avatar-Recovery und Bearlett](docs/recovery-implementation.md) · [Web of Trust / Nostrocket](docs/recovery-trust-research.md)

@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "state": "design_catalog_with_three_preview_builds",
-  "note": "16 function boundaries; three preview builds: member directory, Raffle planner and ticket printer. Operational services remain designs.",
+  "state": "design_catalog_with_four_builds",
+  "note": "16 function boundaries; directory, raffle, printer and recovery builds. Recovery requires an explicitly configured host and policy.",
   "napplets": [
     {
       "id": "guild-roster",
@@ -458,7 +458,23 @@
           }
         }
       ],
-      "dispatches": []
+      "dispatches": [],
+      "implementation": {
+        "state": "preview_built",
+        "entrypoint": "napplets/dist/key-recovery/index.html",
+        "manifest": "napplets/dist/key-recovery/.nip5a-manifest.json",
+        "accepted_conventions": [
+          "napplet:key-recovery/open-v1"
+        ],
+        "optional_dispatches": [
+          {
+            "archetype": "wallet",
+            "convention": "napplet:wallet/recovery-v1",
+            "availability": "requires_compatible_Bearlett_handler"
+          }
+        ],
+        "scope": "Host-backed identity recovery; unavailable without authorized guildRecovery extension. Wallet restore is separate."
+      }
     },
     {
       "id": "guild-collectibles",
