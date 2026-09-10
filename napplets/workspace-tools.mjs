@@ -12,5 +12,5 @@ export const workspaceTools = {
   'group-join': { slug: 'group-join', title: 'Join a group', description: 'Accept your Marmot invitation.' },
   'group-remove': { slug: 'group-removal', title: 'Remove group access', description: 'Revoke a client through Marmot.' },
   'group-roles': { slug: 'group-role-manager', title: 'Group roles', description: 'Review Marmot group duties.' },
-  'group-chat': { slug: 'group-chat', title: 'Party chat', description: 'Read and send messages in authorized Marmot groups.' },
+  'group-chat': { slug: 'group-chat', title: 'Open White Noise', description: 'Open authorized Marmot groups in White Noise.' },
 };

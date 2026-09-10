@@ -6,7 +6,9 @@ export function groupTool(action: 'invite' | 'join' | 'remove' | 'role' | 'creat
   const { panel, service, status, run } = tool(title, 'The host checks group permissions and delegates to Marmot. Unknown results must be reconciled before another action.', slug);
   const name = action === 'create' ? field(panel, 'Group name') : null;
   const groupId = action === 'create' ? null : field(panel, 'Host group reference');
-  const memberId = action === 'create' ? null : field(panel, action === 'join' ? 'Your member ID' : 'Member ID');
+  const memberId = action === 'create' ? null : field(panel, action === 'join'
+    ? 'Your npub or hex pubkey'
+    : 'White Noise npub or hex pubkey');
   const role = action === 'role' ? field(panel, 'Group role: member or moderator') : null;
   let pending: Record<string, unknown> | null = null;
   let inFlight: Promise<unknown> | null = null;
@@ -59,7 +61,9 @@ export function groupTool(action: 'invite' | 'join' | 'remove' | 'role' | 'creat
       status.textContent = 'Pending request cancelled. You can start a new action.';
     }).catch((error: Error) => { status.textContent = error.message; cancelBtn.disabled = !pending || !service; });
   });
-  panel.append(el('p', 'Group membership and encrypted MLS state remain in the Marmot client. No public-chat fallback.', 'muted'));
+  panel.append(el('p', action === 'invite'
+    ? 'Invite an npub that runs White Noise. demo-member is a local row, not an MLS client.'
+    : 'Group membership and encrypted MLS state remain in the Marmot client. Chat opens in White Noise.', 'muted'));
   const restore = async () => {
     const value = await service!.read() as { available?: boolean; pending?: Record<string, unknown>[] };
     submit.disabled = !value?.available;

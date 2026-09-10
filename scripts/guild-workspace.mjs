@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Loopback-only demo host. Throwaway Marmot identity; never use this server for production authentication.
+// Loopback-only test host. Throwaway Marmot secret is offline/e2e only; real people log in with Hangar + Alby.
 import { createServer } from 'node:http';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
@@ -36,11 +36,12 @@ addEventListener('message',event=>{if(event.source!==parent||event.origin!==${JS
  const slot=pending.get(event.data.id);if(!slot)return;clearTimeout(slot.timeout);pending.delete(event.data.id);event.data.error?slot.reject(Error(event.data.error)):slot.resolve(event.data.result);});
 </script>`;
 function home(url) {
+  // group-chat needs allow-popups so whitenoise:// links can leave the sandbox.
   const selected = (url.searchParams.get('tools') ?? 'chapters,calendar,tasks').split(',').filter(tool => Object.hasOwn(workspaceTools, tool));
   const links = Object.entries(workspaceTools).map(([key, tool]) => `<a href="/?tools=${key}">${tool.title}</a>`).join(' ');
   return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>600B Guild Workspace</title>
   <style>body{margin:0;font:16px Arial;background:#f7931a;color:#1b1b19}header,nav{padding:18px}nav{display:flex;flex-wrap:wrap;gap:14px}a{color:inherit}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;padding:16px}iframe{width:100%;height:1050px;border:2px solid #1b1b19;box-sizing:border-box}</style>
-  <header><b>600.wtf / GUILD WORKSPACE</b><p>LOCAL DEMO · throwaway Marmot identity · not production login. HTTP stays on 127.0.0.1. Changes persist in a local SQLite file.</p></header><nav>${links}</nav><main>${selected.map(tool => `<iframe title="${workspaceTools[tool].title}" data-tool="${tool}" sandbox="allow-scripts" src="/tool/${tool}"></iframe>`).join('')}</main>
+  <header><b>600.wtf / GUILD WORKSPACE</b><p>LOCAL TEST HOST · throwaway Marmot secret is offline/e2e only · real login is Hangar + Alby. HTTP stays on 127.0.0.1. Chat opens in White Noise.</p></header><nav>${links}</nav><main>${selected.map(tool => `<iframe title="${workspaceTools[tool].title}" data-tool="${tool}" sandbox="${tool === 'group-chat' ? 'allow-scripts allow-popups' : 'allow-scripts'}" src="/tool/${tool}"></iframe>`).join('')}</main>
   <script>addEventListener('message',async event=>{const frame=[...document.querySelectorAll('iframe')].find(frame=>frame.contentWindow===event.source);
   if(!frame||event.origin!=='null'||event.data?.type!=='guild-demo-request')return;const {id,method,payload}=event.data;
   if(!Number.isSafeInteger(id)||!${JSON.stringify(hostMethods)}.includes(method))return;

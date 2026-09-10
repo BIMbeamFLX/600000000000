@@ -1,6 +1,7 @@
 # Guild workspace
 
-Current release priority (10 September 2026): real Marmot groups and chat first.
+Current release priority (10 September 2026): real Marmot groups first.
+**The messenger is White Noise.** Hangar + Alby (NIP-07) is the real login.
 Meetups and the other guild extras can follow later. See the
 [Grok audit handoff and production acceptance criteria](grok-marmot-audit-handoff.md).
 
@@ -19,13 +20,18 @@ node scripts/guild-workspace.mjs
 ```
 
 Open **http://127.0.0.1:4175**. The default layout places chapters, calendar and
-tasks side by side. The navigation opens each other tool independently. When
-Hangar loads, the organizer id is the throwaway Marmot pubkey from
-`.guild-marmot-secret` / `MARMOT_SECRET` — use that hex id for invite/join.
-`demo-member` is a local GuildStore row only, not an MLS client. Changes persist
-in `.guild-demo.sqlite`. `GUILD_DEMO_DB` selects a different local database and
-`GUILD_PORT` changes the port. This loopback server has no production login and
-must not be reverse-proxied.
+tasks side by side. The navigation opens each other tool independently.
+
+This Node host is **test/offline only**. Set `MARMOT_RELAYS=off` for e2e, or a
+throwaway `MARMOT_SECRET` / `.guild-marmot-secret` for local Marmot wiring.
+Real people do **not** use that file secret, a second `GUILD_DEMO_DB`, or
+`demo-member`. Log in with Hangar and Alby (or any `window.nostr` signer).
+Invite a hex pubkey / npub that runs White Noise and has published a Marmot
+KeyPackage. `demo-member` is a local GuildStore row only, not an MLS client.
+
+Changes persist in `.guild-demo.sqlite`. `GUILD_DEMO_DB` selects a different
+local database and `GUILD_PORT` changes the port. This loopback server has no
+production login and must not be reverse-proxied.
 
 ![Local guild workspace with independent tools](images/guild-workspace-desktop.png)
 
@@ -45,7 +51,7 @@ must not be reverse-proxied.
 | `group-join` | `group-join` | Accept a Marmot invitation for the current member |
 | `group-remove` | `group-removal` | Request removal of a Marmot group member |
 | `group-roles` | `group-role-manager` | Request a member/moderator role change |
-| `group-chat` | `group-chat` | Read and send plaintext messages in authorized groups |
+| `group-chat` | `group-chat` | List authorized groups and open them in White Noise |
 
 All thirteen advertise action `open` with convention `napplet:<archetype>/open-v1`.
 Their exact navigation payload is `{version: 1, guildId: "600b"}`. Opening a tool
@@ -68,13 +74,13 @@ command({requestId, action, input}): Promise<unknown>
 group({requestId, groupId, memberId, role, name?}): Promise<{
   state: 'confirmed' | 'uncertain'; receiptId?: string
 }>
-chat({requestId, groupId, content}): Promise<{
-  state: 'sent' | 'uncertain' | 'failed'; receiptId?: string
-}>
+chat(): Promise<never> // always rejected — White Noise is the messenger
 cancel({requestId}): Promise<{ state: 'cancelled' }>
 ```
 
-`group-chat` `read()` returns `{available, groups:[{groupId,name}], messages}` with plaintext only.
+`group-chat` `read()` returns `{available, groups:[{groupId,name}]}`. It does not send.
+Deep links: `whitenoise://chat/<groupId>` and `whitenoise://user/<npub>`.
+Download: <https://whitenoise.chat/download>.
 `group-create` may send an empty `groupId`; Hangar fills it after create.
 
 `guildCapability` fixes the tool and allowed actions on the host. A tasks frame
@@ -133,16 +139,17 @@ adapter. HTTP stays on 127.0.0.1; relays are only the Marmot transport.
 HANGAR_ROOT=G:/Github/nappelin.com
 # comma-separated WebSocket URLs; unset uses Hangar's public default list
 MARMOT_RELAYS=wss://relay.damus.io,wss://nos.lol
-# 32-byte hex throwaway; otherwise written to gitignored .guild-marmot-secret
+# 32-byte hex throwaway for this Node test host only; written to gitignored .guild-marmot-secret
 MARMOT_SECRET=
 # e2e / fail-closed: MARMOT_RELAYS=off
 ```
 
-This is **not production login**. The actor is a throwaway key whose hex pubkey
-is the GuildStore member id so invite/join ids match MLS. MLS state lives in
-`.guild-marmot/<pubkey>/`. Napplet frames never see MLS secrets, key packages or
-Welcome bytes. No public-chat fallback is provided. Set `MARMOT_RELAYS=off` to
-run the loopback host without an adapter.
+This Node throwaway is **not** how two people chat. The second person is a
+second Alby / White Noise account, not a second SQLite file. MLS state for this
+offline host lives in `.guild-marmot/<pubkey>/`. Napplet frames never see MLS
+secrets, key packages or Welcome bytes. Set `MARMOT_RELAYS=off` to run the
+loopback host without an adapter. Real login is Hangar + Alby, which publishes
+a KeyPackage so White Noise can add that identity.
 
 `ExternalJournal` hashes a canonical encoding of each request so key order cannot
 fork resume. Authorize/validation failures before `execute` propagate and reject
@@ -245,5 +252,6 @@ local demo already, set `GUILD_EXTERNAL_HOST=1` to use it instead. Host tests co
 role revocation, stale sessions, transactional deduplication, restart recovery,
 concurrent external requests, partial recovery and signer changes. The browser
 suite checks persistence, sibling unmount, mobile layouts, scoped tools
-and unavailable adapters. Hangar memory-network tests cover create/invite/join/chat
-without sockets. It does not prove production Marmot or White Noise interop.
+and unavailable adapters. Hangar memory-network tests cover create/invite/join
+without sockets. Host tests assert the chat tool cannot send. It does not prove
+live White Noise interop.

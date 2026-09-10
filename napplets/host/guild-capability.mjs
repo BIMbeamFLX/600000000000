@@ -7,15 +7,6 @@ export function guildCapability(store, journal, actor, tool, adapters = {}) {
   const commands = { chapters: ['chapter.create'], calendar: ['event.create'], tasks: ['task.create', 'task.complete'], roles: ['role.set'], cosmetics: ['cosmetic.preview'] };
   const groupActions = { 'group-invite': 'invite', 'group-join': 'join', 'group-remove': 'remove', 'group-roles': 'role', 'group-create': 'create' };
   const marmotReady = marmot => marmot?.protocol === 'marmot' && ['execute', 'status', 'authorize'].every(key => typeof marmot[key] === 'function');
-  const plaintextMessage = (row, groupId) => {
-    if (!row || typeof row !== 'object') return null;
-    const id = typeof row.id === 'string' ? row.id : '';
-    const pubkey = typeof row.pubkey === 'string' ? row.pubkey : '';
-    const content = typeof row.content === 'string' ? row.content : '';
-    const createdAt = Number.isFinite(row.createdAt) ? row.createdAt : Number(row.created_at);
-    if (!id || !pubkey || !content || content.length > 1000 || !Number.isFinite(createdAt)) return null;
-    return { id, groupId, pubkey, content, createdAt };
-  };
   const principal = () => store.authorize(actor());
   return {
     async read() {
@@ -31,7 +22,7 @@ export function guildCapability(store, journal, actor, tool, adapters = {}) {
       if (tool === 'group-chat') {
         const marmot = adapters.marmot;
         const available = marmotReady(marmot) && typeof marmot.listGroups === 'function';
-        if (!available) return { available: false, groups: [], messages: [], pending: [] };
+        if (!available) return { available: false, groups: [] };
         const source = principal();
         if (typeof marmot.ingest === 'function') await marmot.ingest().catch(() => {});
         requireValue(principal().memberId === source.memberId && principal().version === source.version, 'Identity changed');
@@ -41,20 +32,7 @@ export function guildCapability(store, journal, actor, tool, adapters = {}) {
           if (!group || typeof group.groupId !== 'string' || !group.groupId) return [];
           return [{ groupId: group.groupId, name: typeof group.name === 'string' ? group.name.slice(0, 80) : '' }];
         });
-        const messages = [];
-        if (typeof marmot.listMessages === 'function') {
-          for (const group of groups) {
-            const batch = await marmot.listMessages(group.groupId);
-            requireValue(principal().memberId === source.memberId && principal().version === source.version, 'Identity changed');
-            for (const row of Array.isArray(batch) ? batch : []) {
-              const message = plaintextMessage(row, group.groupId);
-              if (message) messages.push(message);
-            }
-          }
-        }
-        requireValue(principal().memberId === source.memberId && principal().version === source.version, 'Identity changed');
-        messages.sort((a, b) => a.createdAt - b.createdAt || a.id.localeCompare(b.id));
-        return { available: true, groups, messages: messages.slice(-200), pending: journal.pending(principal(), 'chat') };
+        return { available: true, groups };
       }
       requireValue(groupActions[tool], 'Unknown tool');
       return { available: marmotReady(adapters.marmot), pending: journal.pending(principal(), groupActions[tool]) };
@@ -92,33 +70,13 @@ export function guildCapability(store, journal, actor, tool, adapters = {}) {
         requireValue(after.memberId === source.memberId && after.version === source.version, 'Identity changed');
       });
     },
-    async chat(request) {
-      principal(); requireValue(tool === 'group-chat', 'No chat authority for this tool');
-      requireValue(request && Object.keys(request).sort().join(',') === 'content,groupId,requestId', 'Invalid chat command');
-      boundedId(request.groupId); boundedId(request.requestId);
-      requireValue(typeof request.content === 'string' && request.content.trim().length > 0 && request.content.length <= 1000 && !/[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(request.content), 'Invalid message');
-      const marmot = adapters.marmot;
-      requireValue(marmotReady(marmot), 'Marmot client unavailable');
-      const source = principal();
-      const command = {
-        requestId: request.requestId, groupId: request.groupId, memberId: source.memberId, role: '',
-        content: request.content.trim(), action: 'chat', actorId: source.memberId, identityVersion: source.version,
-      };
-      const result = await journal.run(command, marmot, async () => {
-        const current = principal();
-        requireValue(current.memberId === source.memberId && current.version === source.version, 'Identity changed');
-        requireValue(await marmot.authorize(current, command), 'Marmot group action not authorized');
-        const after = principal();
-        requireValue(after.memberId === source.memberId && after.version === source.version, 'Identity changed');
-      });
-      if (typeof marmot.ingest === 'function') await marmot.ingest().catch(() => {});
-      return result.state === 'confirmed'
-        ? { state: 'sent', receiptId: result.receiptId }
-        : { state: 'uncertain' };
+    async chat() {
+      principal();
+      throw Error('Chat is handled by White Noise');
     },
     async cancel(request) {
       principal();
-      const action = groupActions[tool] ?? (tool === 'group-chat' ? 'chat' : null);
+      const action = groupActions[tool];
       requireValue(action, 'No group authority for this tool');
       requireValue(request && Object.keys(request).sort().join(',') === 'requestId', 'Invalid cancel');
       boundedId(request.requestId);

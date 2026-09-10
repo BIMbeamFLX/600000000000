@@ -54,8 +54,9 @@ test('all four Marmot tools and external status views fail closed without adapte
     await expect(frame.getByRole('button', { name: /^Request / })).toBeDisabled();
   }
   const chat = page.frameLocator('[data-tool="group-chat"]');
-  await expect(chat.getByRole('status')).toHaveText('Marmot client unavailable.');
-  await expect(chat.getByRole('button', { name: 'Send message' })).toBeDisabled();
+  await expect(chat.getByRole('status')).toContainText('Marmot client unavailable');
+  await expect(chat.getByRole('button', { name: 'Send message' })).toHaveCount(0);
+  await expect(chat.getByRole('link', { name: 'Download White Noise' })).toBeVisible();
   await expect(page.frameLocator('[data-tool="fips"]').getByRole('status')).toHaveText('fips adapter unavailable');
   await expect(page.frameLocator('[data-tool="treasury"]').getByRole('status')).toHaveText('treasury adapter unavailable');
 });
@@ -100,7 +101,7 @@ test('Marmot UI restores an uncertain request and reconciles its original ID', a
   await page.goto('/?tools=group-invite');
   const frame = page.frameLocator('iframe');
   await frame.getByLabel('Host group reference').fill('group-1');
-  await frame.getByLabel('Member ID').fill('demo-member');
+  await frame.getByLabel('White Noise npub or hex pubkey').fill('demo-member');
   await frame.getByRole('button', { name: 'Request invite', exact: true }).click();
   await expect(frame.getByRole('status')).toContainText('Outcome uncertain');
   await page.reload();
@@ -132,53 +133,46 @@ test('Marmot UI cancels a pending request and allows a new one', async ({ page }
   await page.goto('/?tools=group-invite');
   const frame = page.frameLocator('iframe');
   await frame.getByLabel('Host group reference').fill('group-1');
-  await frame.getByLabel('Member ID').fill('demo-member');
+  await frame.getByLabel('White Noise npub or hex pubkey').fill('demo-member');
   await frame.getByRole('button', { name: 'Request invite', exact: true }).click();
   await expect(frame.getByRole('status')).toContainText('Outcome uncertain');
   await expect(frame.getByLabel('Host group reference')).toBeDisabled();
   await frame.getByRole('button', { name: 'Cancel pending request' }).click();
   await expect(frame.getByRole('status')).toContainText('cancelled');
   await expect(frame.getByLabel('Host group reference')).toBeEnabled();
-  await frame.getByLabel('Member ID').fill('other-member');
+  await frame.getByLabel('White Noise npub or hex pubkey').fill('other-member');
   await frame.getByRole('button', { name: 'Request invite', exact: true }).click();
   await expect(frame.getByRole('status')).toContainText('Outcome uncertain');
   expect(calls[0]).toMatchObject({ groupId: 'group-1', memberId: 'demo-member' });
   expect(calls.at(-1)).toMatchObject({ groupId: 'group-1', memberId: 'other-member' });
 });
 
-test('group chat fails closed without adapter and shows a fixture send', async ({ page }) => {
+test('group chat launcher lists groups and never sends', async ({ page }) => {
   await page.goto('/?tools=group-chat');
   const closed = page.frameLocator('iframe');
-  await expect(closed.getByRole('status')).toHaveText('Marmot client unavailable.');
-  await expect(closed.getByRole('button', { name: 'Send message' })).toBeDisabled();
-  const history: { id: string; groupId: string; pubkey: string; content: string; createdAt: number }[] = [];
+  await expect(closed.getByRole('status')).toContainText('Marmot client unavailable');
+  await expect(closed.getByRole('button', { name: 'Send message' })).toHaveCount(0);
+  await expect(closed.getByLabel('Message')).toHaveCount(0);
+  let chatCalls = 0;
   await page.exposeFunction('fixtureRead', () => ({
     available: true,
     groups: [{ groupId: 'group-1', name: 'clan' }],
-    messages: history,
-    pending: [],
+    npub: 'npub1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqcpxt8g',
   }));
-  await page.exposeFunction('fixtureChat', (request: Record<string, unknown>) => {
-    history.push({
-      id: String(request.requestId), groupId: String(request.groupId), pubkey: 'aa'.repeat(32),
-      content: String(request.content), createdAt: 1_700_000_000,
-    });
-    return { state: 'sent', receiptId: String(request.requestId) };
-  });
-  await page.exposeFunction('fixtureCancel', () => ({ state: 'cancelled' }));
+  await page.exposeFunction('fixtureChat', () => { chatCalls += 1; throw new Error('chat must not send'); });
   await page.addInitScript(() => {
     const fixture = window as any;
     Object.defineProperty(window, 'napplet', { configurable: true, get: () => ({ guild: {
-      read: () => fixture.fixtureRead(), chat: (request: unknown) => fixture.fixtureChat(request),
+      read: () => fixture.fixtureRead(), chat: () => fixture.fixtureChat(),
       group: () => Promise.reject(Error('No group authority for this tool')),
-      cancel: (request: unknown) => fixture.fixtureCancel(request),
+      cancel: () => Promise.reject(Error('No group authority for this tool')),
     } }), set: () => {} });
   });
   await page.goto('/?tools=group-chat');
   const frame = page.frameLocator('iframe');
-  await expect(frame.getByRole('status')).toContainText('Marmot host connected');
-  await frame.getByLabel('Message').fill('hello from fixture');
-  await frame.getByRole('button', { name: 'Send message' }).click();
-  await expect(frame.getByRole('status')).toHaveText('Message sent.');
-  await expect(frame.getByText('hello from fixture')).toBeVisible();
+  await expect(frame.getByRole('status')).toContainText('Open a group in White Noise');
+  await expect(frame.getByRole('link', { name: 'Open in White Noise' })).toHaveAttribute('href', 'whitenoise://chat/group-1');
+  await expect(frame.getByRole('link', { name: 'Download White Noise' })).toBeVisible();
+  await expect(frame.getByRole('button', { name: 'Send message' })).toHaveCount(0);
+  expect(chatCalls).toBe(0);
 });

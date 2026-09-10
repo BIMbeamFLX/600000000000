@@ -30,8 +30,8 @@ unverbunden. Echte Auszahlungen sind geschlossen.
 | Raffle-Planer | Preisstufen, Presets, Ticketanzahl, Sats-Budget und Export eines Vorschau-Plans |
 | Ticket-Printer | Eigenständiges Werkzeug; Plan importieren, Loslayout ansehen, Vorschau-PDF herunterladen |
 | Supply-Modell | Reproduzierbare 21-Jahres-Rechnung mit ganzen atomaren Einheiten und Tests |
-| Gilden-Komposition | 20 Werkzeuggrenzen, 17 Builds; lokaler SQLite-Workspace, Hangar-Marmot-Demo |
-| Marmot / FIPS / Liquid-Ausgabe | Marmot-Demo über Hangar und Relays; FIPS und Auszahlung unverbunden |
+| Gilden-Komposition | 20 Werkzeuggrenzen, 17 Builds; lokaler SQLite-Workspace; Hangar + Alby für echte Identität |
+| Marmot / White Noise / FIPS | Gruppen in Hangar; Chat in White Noise; FIPS und Auszahlung unverbunden |
 
 Ein angezeigter Nostr-Schlüssel ist noch keine authentifizierte Mitgliedschaft.
 Die aktuellen Seiten veröffentlichen keine Mitgliedschaft und zahlen keine Tokens aus.
@@ -42,9 +42,10 @@ Die aktuellen Seiten veröffentlichen keine Mitgliedschaft und zahlen keine Toke
 node scripts/guild-workspace.mjs
 ```
 
-Mit Node.js 24 unter **http://127.0.0.1:4175** öffnen. Der lokale Workspace nutzt
-eine Wegwerf-Marmot-Identität (kein Produktions-Login) und speichert Änderungen
-auf diesem Rechner. `HANGAR_ROOT`, `MARMOT_RELAYS` und `MARMOT_SECRET` stehen in
+Mit Node.js 24 unter **http://127.0.0.1:4175** öffnen. Der Node-Host ist nur für
+Tests und Offline (`MARMOT_RELAYS=off` / e2e). Echte Leute loggen sich in Hangar
+mit Alby (NIP-07) ein. Der Messenger ist White Noise, nicht dieses Chat-Napplet.
+`HANGAR_ROOT`, `MARMOT_RELAYS` und `MARMOT_SECRET` stehen in
 [docs/guild-workspace.md](docs/guild-workspace.md). HTTP bleibt Loopback; Relays
 sind nur der Marmot-Transport. Ortsgruppen, Termine und Aufgaben laufen
 nebeneinander; jedes weitere Werkzeug lässt sich einzeln öffnen.

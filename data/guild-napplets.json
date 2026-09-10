@@ -278,8 +278,8 @@
     },
     {
       "id": "guild-chat",
-      "name": "Party chat",
-      "purpose": "Read and send messages in authorized Marmot groups",
+      "name": "Open White Noise",
+      "purpose": "List authorized Marmot groups and open them in White Noise",
       "host_services": [
         "marmot_messages"
       ],
