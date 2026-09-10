@@ -1,5 +1,9 @@
 # Guild workspace
 
+Current release priority (10 September 2026): real Marmot groups and chat first.
+Meetups and the other guild extras can follow later. See the
+[Grok audit handoff and production acceptance criteria](grok-marmot-audit-handoff.md).
+
 Eleven small tools extend the existing directory, recovery and two Raffle builds.
 Each builds to its own HTML file and manifest. They share presentation helpers;
 they never import another napplet or read a sibling frame's state.

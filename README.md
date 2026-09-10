@@ -230,3 +230,6 @@ Charakterbilder werden durch diese Code-Lizenz nicht pauschal neu lizenziert.
 Details zum [Mitglieder-Napplet und seinen Intent-Grenzen](docs/member-directory.md).
 
 [Gilden-Workspace und Host-Verträge](docs/guild-workspace.md) · [Avatar-Recovery und Bearlett](docs/recovery-implementation.md) · [Web of Trust / Nostrocket](docs/recovery-trust-research.md)
+
+Nächster Meilenstein: **echte Marmot-Gruppe und Chat**; Meetups und weitere
+Gildenfunktionen folgen später. [Audit-Übergabe für Grok und Produktionskriterien](docs/grok-marmot-audit-handoff.md).
