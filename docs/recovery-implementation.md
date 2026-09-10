@@ -115,4 +115,6 @@ Backup tab; encrypted wallet storage remains byte-for-byte unchanged and no reso
 payment request occurs. Disposable fixture keys and a simulated clock are used.
 It is an integration test, not production signer/transport conformance.
 
-![Local recovery and Bearlett integration fixture](images/recovery-bearlett-integration.png)
+![Guild recovery in the local integration fixture](images/recovery-bearlett-integration.png)
+
+![Bearlett after the separate restore handoff](images/recovery-bearlett-wallet.png)

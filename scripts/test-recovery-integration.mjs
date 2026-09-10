@@ -91,9 +91,10 @@ try {
   await wallet.getByRole('heading', { name: 'Import a napplet backup' }).waitFor();
   assert.equal(await page.evaluate(() => JSON.stringify([...window.hostStores.wallet])), before);
   assert.equal(await page.evaluate(() => window.hostCalls.filter(call => call.type === 'resource.bytes').length), 0);
-  await page.locator('#recovery').evaluate(frame => { frame.style.height = '1600px'; });
+  await page.locator('#wallet').screenshot({ path: 'docs/images/recovery-bearlett-wallet.png' });
+  await page.locator('#recovery').evaluate(frame => { frame.style.height = '1500px'; });
   await recovery.locator('body').evaluate(() => window.scrollTo(0, 0));
   await page.evaluate(() => window.scrollTo(0, 0));
-  await page.screenshot({ path: 'docs/images/recovery-bearlett-integration.png', fullPage: true });
+  await page.locator('#recovery').screenshot({ path: 'docs/images/recovery-bearlett-integration.png' });
   console.log('PASS: real signed recovery -> SQLite activation -> recovery napplet -> Bearlett restore review; wallet unchanged.');
 } finally { await browser?.close(); server.kill(); ledger.close(); }
