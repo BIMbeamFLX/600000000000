@@ -112,6 +112,16 @@ Palace-Projekt verwendet noch `protocol/protocols`; der Unterschied ist
 [dokumentiert](docs/guild-intents.md). Browser-Tests verwenden Host-Domain-Fixtures,
 keinen vollständigen installierten Produktions-Host.
 
+### Napplet metadata
+
+Every build in `napplets/dist/` is one self-contained HTML file. Its head carries
+`<meta name="napplet-type">` (the manifest `d` tag) and `<meta name="napplet-requires">`
+(the shell domains the code uses). Both come from `napplets/vite.config.ts`, which writes
+the same list as `requires` tags into `.nip5a-manifest.json`: the raffle planner needs
+`inc,intent`, the ticket printer `inc`. `npm --prefix napplets run test:conformance`
+runs `@napplet/conformance-cli` against both builds (its Chromium once:
+`cd napplets && npx playwright install chromium`).
+
 ### Lokale Einrichtung
 
 Voraussetzungen: **Node.js 24**, npm, **Python 3.12+** und **uv**.
@@ -148,6 +158,7 @@ signierte Installation. Dieser PR richtet keinen Produktionsdienst ein.
 npm run test:unit
 npm --prefix napplets test
 npm --prefix napplets run typecheck
+npm --prefix napplets run test:conformance
 npx playwright test tests/pebbles.spec.ts tests/elders.spec.ts tests/raffle.spec.ts
 node scripts/supply-plan.mjs
 node scripts/capture-readme.mjs
