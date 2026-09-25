@@ -9,7 +9,8 @@
     "typecheck": "tsc --noEmit",
     "test:recovery": "node --test host/*.test.mjs",
     "build:workspace": "node build-workspace.mjs",
-    "test:host": "node --test host/*.test.mjs"
+    "test:host": "node --test host/*.test.mjs",
+    "test:conformance": "node conformance.mjs"
   },
   "dependencies": {
     "@napplet/sdk": "0.28.0",
@@ -19,6 +20,7 @@
     "@noble/curves": "2.4.0"
   },
   "devDependencies": {
+    "@napplet/conformance-cli": "0.2.19",
     "@napplet/vite-plugin": "0.14.1",
     "@types/qrcode": "1.5.5",
     "typescript": "5.9.3",

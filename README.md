@@ -133,6 +133,26 @@ Palace-Projekt verwendet noch `protocol/protocols`; der Unterschied ist
 [dokumentiert](docs/guild-intents.md). Browser-Tests verwenden Host-Domain-Fixtures,
 keinen vollständigen installierten Produktions-Host.
 
+### Napplet metadata
+
+Every build in `napplets/dist/` is one self-contained HTML file. Its head carries
+`<meta name="napplet-type">` (the manifest `d` tag) and `<meta name="napplet-requires">`
+(the NAP domains the code uses). Both come from `napplets/vite.config.ts`, which writes
+the same list as `requires` tags into `.nip5a-manifest.json`, for the Vite builds and for
+`build-workspace.mjs` alike:
+
+| Builds | `napplet-requires` |
+|---|---|
+| raffle, member-directory | `inc,intent` |
+| ticket-printer, key-recovery | `inc` |
+| chapters, calendar, tasks, roles, treasury, cosmetics, fips, group-* | `inc` |
+
+The workspace and group-* tools also use `window.napplet.guild`. That is a custom host
+channel of the guild workspace and the Hangar, not a NAP domain, so it is not in the
+meta; its contract is in [docs/guild-workspace.md](docs/guild-workspace.md#host-boundary).
+`npm --prefix napplets run test:conformance` runs `@napplet/conformance-cli` against
+every build (its Chromium once: `cd napplets && npx playwright install chromium`).
+
 ### Lokale Einrichtung
 
 Voraussetzungen: **Node.js 24**, npm, **Python 3.12+** und **uv**.
@@ -171,6 +191,7 @@ npm run test:unit
 npm --prefix napplets test
 npm --prefix napplets run typecheck
 npm --prefix napplets run test:host
+npm --prefix napplets run test:conformance
 npm run test:e2e:guild
 npx playwright test tests/pebbles.spec.ts tests/elders.spec.ts tests/raffle.spec.ts
 node scripts/supply-plan.mjs
