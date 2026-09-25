@@ -1,6 +1,6 @@
 {
   "kind": 35129,
-  "created_at": 1789032770,
+  "created_at": 1790329526,
   "tags": [
     [
       "d",
@@ -9,12 +9,16 @@
     [
       "path",
       "/index.html",
-      "eedc84c3c5e4fbabf38d9ffbd984500532267fefb7f7689e0ac045d1087815bf"
+      "cf749d075c0d2a75e243bbd3294958767f50c3416d5ca15502038cb9e4ea5999"
     ],
     [
       "x",
-      "a5ce505f95587fb8a969c0515f52a07f914bfcf652ee931a9e1bdc145f3231d1",
+      "9be0e8006dcecdee6f55528b2350a60ef087da49ce2f428e4e96bea6b068de0a",
       "aggregate"
+    ],
+    [
+      "requires",
+      "inc"
     ],
     [
       "archetype",
@@ -23,5 +27,5 @@
     ]
   ],
   "content": "",
-  "aggregateHash": "a5ce505f95587fb8a969c0515f52a07f914bfcf652ee931a9e1bdc145f3231d1"
+  "aggregateHash": "9be0e8006dcecdee6f55528b2350a60ef087da49ce2f428e4e96bea6b068de0a"
 }
